@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:gravity="center"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Your Food Preference?"
+        android:textColor="#9b9b9b"
+        android:textSize="20sp" />
+
+    <RadioGroup
+        android:id="@+id/rgDashFood"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <me.omidh.liquidradiobutton.LiquidRadioButton
+            android:id="@+id/rbDashVeg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text=" Veg"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="20sp"
+            app:lrb_explodeCount="4"
+            app:lrb_inAnimDuration="500"
+            app:lrb_innerCircleRadius="5dp"
+            app:lrb_outAnimDuration="500"
+            app:lrb_outterPadding="5dp"
+            app:lrb_strokeRadius="10dp"
+            app:lrb_checkedColor="@android:color/holo_blue_bright"
+            app:lrb_unCheckedColor="@android:color/holo_blue_bright" />
+
+        <me.omidh.liquidradiobutton.LiquidRadioButton
+            android:id="@+id/rbDashNonveg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text=" Non Veg"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="20sp"
+            app:lrb_explodeCount="4"
+            app:lrb_inAnimDuration="500"
+            app:lrb_innerCircleRadius="5dp"
+            app:lrb_outAnimDuration="500"
+            app:lrb_outterPadding="5dp"
+            app:lrb_checkedColor="@android:color/holo_blue_bright"
+            app:lrb_strokeRadius="10dp"
+            app:lrb_unCheckedColor="@android:color/holo_blue_bright" />
+        <me.omidh.liquidradiobutton.LiquidRadioButton
+            android:id="@+id/rbDashVegan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text=" Vegan"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="20sp"
+            app:lrb_explodeCount="4"
+            app:lrb_inAnimDuration="500"
+            app:lrb_innerCircleRadius="5dp"
+            app:lrb_outAnimDuration="500"
+            app:lrb_outterPadding="5dp"
+            app:lrb_strokeRadius="10dp"
+            app:lrb_checkedColor="@android:color/holo_blue_bright"
+            app:lrb_unCheckedColor="@android:color/holo_blue_bright" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Which Restaurant You want to Visit"
+        android:textColor="#9b9b9b"
+        android:textSize="20sp" />
+
+    <Spinner
+        android:id="@+id/spnFilterRest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnFilterSave"
+        android:layout_width="300dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btnbg"
+        android:text="Apply Filter"
+        android:textColor="#9b9b9b"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</LinearLayout>

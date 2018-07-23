@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">M2M</string>
+    <string name="introDesc1">Lorem Ipsum is simply dummy text of the \n\t\tprinting and typesetting industry.</string>
+    <string name="introDesc2">Lorem Ipsum is simply dummy text of the \n\t\tprinting and typesetting industry.</string>
+    <string name="introDesc3">Lorem Ipsum is simply dummy text of the \n\t\tprinting and typesetting industry.</string>
+
+    <string name="pg1">Discover New Friends</string>
+    <string name="pg2">Explore Nice Restaurants</string>
+    <string name="pg3">Don\'t Eat Alone</string>
+    <string name="editDesc">\t\tEdit your profile to get\nwhat you are looking foor</string>
+
+
+    <string name="facebook_app_id">2434251726603876</string>
+    <string name="fb_login_protocol_scheme">fb2434251726603876</string>
+</resources>
