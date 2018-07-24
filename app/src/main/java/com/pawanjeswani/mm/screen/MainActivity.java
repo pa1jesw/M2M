@@ -40,7 +40,7 @@ import me.relex.circleindicator.CircleIndicator;
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager vpIntro;
-    private Button fbtnfb;
+    private Button fbtnfb,skipfb;
     private sliderAdapter adapter;
     private CircleIndicator pageIndicator;
     private CallbackManager callbackManager;
@@ -68,6 +68,23 @@ public class MainActivity extends AppCompatActivity {
         vpIntro.setAdapter(adapter);
         pageIndicator.setViewPager(vpIntro);
         fbtnfb = findViewById(R.id.btnFBC);
+        skipfb = findViewById(R.id.btnskip);
+        checklocperm();
+        skipfb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(),edit_profile.class);
+                i.putExtra("fname","firstname &");
+                i.putExtra("lname","lastname from fb");
+                i.putExtra("email","email");
+                i.putExtra("fbid","fb unique id");
+                i.putExtra("birthdate","01/02/1995");
+                i.putExtra("profilepic","profile_url by fb");
+                i.putExtra("gender","female");
+                startActivity(i);
+                finish();
+            }
+        });
         if(merlinsBeard.isConnected()) {
             fbtnfb.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -173,7 +190,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "granted", Toast.LENGTH_SHORT).show();}
                     @Override public void onPermissionDenied(PermissionDeniedResponse response) {/* ... */}
                     @Override public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {/* ... */}
-                }).check();
+                })
+                .check();
     }
     @Override
     protected void onResume() {

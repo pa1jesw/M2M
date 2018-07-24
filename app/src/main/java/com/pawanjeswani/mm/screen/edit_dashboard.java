@@ -10,6 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,16 +23,26 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.pawanjeswani.mm.R;
+import com.pawanjeswani.mm.model.latlon_rest_pojo;
 import com.pawanjeswani.mm.model.userpojo;
+import com.pawanjeswani.mm.network.RerofitInstance;
+import com.pawanjeswani.mm.network.apiinter;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.List;
 
 import me.omidh.liquidradiobutton.LiquidRadioButton;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class edit_dashboard extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class edit_dashboard extends AppCompatActivity
+        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private ImageView ivDashBack, ivDashMenu;
     private EditText etDashUname, etDashUage, etDashUwork, etEtDashUDesc;
@@ -38,12 +50,15 @@ public class edit_dashboard extends AppCompatActivity implements GoogleApiClient
     private RadioGroup rgDashGender, rgDashFoodPr;
     private LiquidRadioButton rbMale, rbFemale, rbDashVeg, rbDashNV, rbDashVegan;
     private Spinner spnDashRestlist;
-    private String fname = "", lname = "", email = "", id = "", birthdate = "", profile_url = "", gender = "";
+    private String fname = "", lname = "", email = "", id = "", birthdate = "", profile_url = "", gender = "", RestList="";
     private Calendar dob = Calendar.getInstance();
     private userpojo dashuser;
+    public static final String Root_Url = "https://nearby-restaurant.000webhostapp.com/";
     double uDashlat, uDashlon;
     private GoogleApiClient mLocationClient;
     private Location mLastLoc;
+    private String [] nearbyRestArr;
+    private ArrayAdapter<String> restAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +81,13 @@ public class edit_dashboard extends AppCompatActivity implements GoogleApiClient
         rbMale = findViewById(R.id.rbDashMale);
         spnDashRestlist = findViewById(R.id.spnDashRest);
         btnSavePro = findViewById(R.id.btnDashSave);
+        ivDashBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
 
         //getting data from fb
         Intent i = getIntent();
@@ -87,13 +109,28 @@ public class edit_dashboard extends AppCompatActivity implements GoogleApiClient
         builder.addConnectionCallbacks(this);
         builder.addOnConnectionFailedListener(this);
         mLocationClient = builder.build();
+        //retrofit url setting
+        apiinter api = RerofitInstance.getRetrofitInstance().create(apiinter.class);
 
-        ivDashBack.setOnClickListener(new View.OnClickListener() {
+        //save user details on server
+        btnSavePro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                if(btnSavePro.isEnabled())
+                if(isDataCorret())
+                {
+                    insertUser();
+                    Toast.makeText(edit_dashboard.this, "User data Uploaded on DB", Toast.LENGTH_LONG).show();
+                    btnSavePro.setEnabled(false);
+                }
             }
         });
+
+
+    }
+
+    private void insertUser() {
+        
     }
 
     private void setgender() {
@@ -139,7 +176,10 @@ public class edit_dashboard extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -174,5 +214,33 @@ public class edit_dashboard extends AppCompatActivity implements GoogleApiClient
         {
             mLocationClient.connect();
         }
+    }
+    private boolean isDataCorret(){
+        if(etDashUname.getText().toString().length()<3)
+            {
+                etDashUname.setError("invalid name");
+                etDashUname.requestFocus();
+                return false;
+            }
+        else if(etDashUage.getText().toString().length()<2)
+        {
+            etDashUage.setError("invalid Age");
+            etDashUage.requestFocus();
+            return false;
+        }
+        else if(etDashUwork.getText().toString().length()<5)
+        {
+            etDashUwork.setError("invalid work");
+            etDashUwork.requestFocus();
+            return false;
+        }
+        else if(etEtDashUDesc.getText().toString().length()<10)
+        {
+            etEtDashUDesc.setError("not less than 10");
+            etEtDashUDesc.requestFocus();
+            return false;
+        }
+        else
+            return true;
     }
 }

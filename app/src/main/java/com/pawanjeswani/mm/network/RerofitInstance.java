@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RerofitInstance {
     private static Retrofit retrofit;
-    private static final String BASE_URL = "https://nearby-restaurant.000webhostapp.com/nearby_restaurants.php";
+    private static final String BASE_URL = "https://nearby-restaurant.000webhostapp.com";
 
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {

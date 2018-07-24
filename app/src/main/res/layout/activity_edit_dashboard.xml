@@ -332,6 +332,7 @@
                 android:textSize="20sp" />
             <Spinner
                 android:id="@+id/spnDashRest"
+                android:entries="@array/nearrestList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <Button
