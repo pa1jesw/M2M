@@ -13,7 +13,7 @@
     <string name="facebook_app_id">2434251726603876</string>
     <string name="fb_login_protocol_scheme">fb2434251726603876</string>
 
-    <string-array name="nearrestList" >
+    <string-array name="nearrestList">
         <item name="1">Domino's Pizza</item>
         <item name="2">Roti N</item>
         <item name="3">Amar Fast Food n Restaurant</item>
@@ -21,6 +21,14 @@
         <item name="5">McDonald's</item>
         <item name="6">The J</item>
         <item name="7">Prasad Food Divine</item>
-        </string-array>
+    </string-array>
+    <string name="title_activity_navdraw">navdraw</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main_screen"> </string>
 
 </resources>

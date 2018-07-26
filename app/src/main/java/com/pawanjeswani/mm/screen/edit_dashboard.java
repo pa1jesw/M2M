@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -22,11 +23,15 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.pawanjeswani.mm.R;
 import com.pawanjeswani.mm.model.latlon_rest_pojo;
+import com.pawanjeswani.mm.model.response_user_id;
 import com.pawanjeswani.mm.model.userpojo;
+import com.pawanjeswani.mm.network.ApiUtils;
 import com.pawanjeswani.mm.network.RerofitInstance;
 import com.pawanjeswani.mm.network.apiinter;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -44,6 +49,7 @@ import retrofit2.Response;
 public class edit_dashboard extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private CircularImageView ivUser;
     private ImageView ivDashBack, ivDashMenu;
     private EditText etDashUname, etDashUage, etDashUwork, etEtDashUDesc;
     private Button btnSavePro;
@@ -53,18 +59,21 @@ public class edit_dashboard extends AppCompatActivity
     private String fname = "", lname = "", email = "", id = "", birthdate = "", profile_url = "", gender = "", RestList="";
     private Calendar dob = Calendar.getInstance();
     private userpojo dashuser;
-    public static final String Root_Url = "https://nearby-restaurant.000webhostapp.com/";
+    private int selected_food=1;
+    //public static final String Root_Url = "https://nearby-restaurant.000webhostapp.com/";
     double uDashlat, uDashlon;
     private GoogleApiClient mLocationClient;
     private Location mLastLoc;
     private String [] nearbyRestArr;
     private ArrayAdapter<String> restAdapter;
+    private RadioButton dumRB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_dashboard);
         //mapping with java
+        ivUser = findViewById(R.id.ivUserPic);
         ivDashBack = findViewById(R.id.ivdashback);
         ivDashMenu = findViewById(R.id.ivdashmenu);
         etDashUname = findViewById(R.id.etdashName);
@@ -102,15 +111,25 @@ public class edit_dashboard extends AppCompatActivity
         etDashUname.setText("" + fname + " " + lname);
         setAge();
         setgender();
-        Toast.makeText(this, "profile url yet to be set\n" + profile_url, Toast.LENGTH_LONG).show();
+        selected_food = rgDashGender.getCheckedRadioButtonId();
 
+
+
+
+        try {
+            Picasso.with(getApplicationContext()).load("https://graph.facebook.com/1782673958467396/picture?type=large")
+            .error(R.drawable.intropg1).into(ivUser);
+        } catch (Exception e) {
+            Toast.makeText(this,
+                    ""+e.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
+        }
         //set google api client for getting current lat lon
         GoogleApiClient.Builder builder = new GoogleApiClient.Builder(this).addApi(LocationServices.API);
         builder.addConnectionCallbacks(this);
         builder.addOnConnectionFailedListener(this);
         mLocationClient = builder.build();
         //retrofit url setting
-        apiinter api = RerofitInstance.getRetrofitInstance().create(apiinter.class);
+        //apiinter api = RerofitInstance.getRetrofitInstance().create(apiinter.class);
 
         //save user details on server
         btnSavePro.setOnClickListener(new View.OnClickListener() {
@@ -119,9 +138,12 @@ public class edit_dashboard extends AppCompatActivity
                 if(btnSavePro.isEnabled())
                 if(isDataCorret())
                 {
+                    Toast.makeText(edit_dashboard.this, "insert User calling", Toast.LENGTH_LONG).show();
                     insertUser();
-                    Toast.makeText(edit_dashboard.this, "User data Uploaded on DB", Toast.LENGTH_LONG).show();
                     btnSavePro.setEnabled(false);
+                    /*Intent i = new Intent(getApplicationContext(),MainScreen.class);
+                    startActivity(i);
+                    finish();*/
                 }
             }
         });
@@ -130,9 +152,46 @@ public class edit_dashboard extends AppCompatActivity
     }
 
     private void insertUser() {
-        
+        Call<response_user_id> callingurl =
+                ApiUtils.getResponseUser().insertUser(fname+" "+lname,""+getAge(dob),email,gender,profile_url,
+                        etDashUwork.getText().toString().trim(),
+                        etEtDashUDesc.getText().toString().trim(),
+                        ""+getFoodType(selected_food),"123,456,789");
+        /*try {
+            callingurl.execute();
+        } catch (IOException e) {
+            etEtDashUDesc.setText(""+e.toString());
+        }
+*/
+        callingurl.enqueue(new Callback<response_user_id>() {
+            @Override
+            public void onResponse(Call<response_user_id> call, Response<response_user_id> response) {
+                if(response.isSuccessful()) {
+            Toast.makeText(edit_dashboard.this, "user id is"+response.body().getId()+"\n"+response.code(), Toast.LENGTH_LONG).show();
+                }
+
+                else
+                    etEtDashUDesc.setText("is nnot succecfull"+response.body());
+            }
+
+            @Override
+            public void onFailure(Call<response_user_id> call, Throwable t) {
+                etDashUwork.setText("thworable fail "+t.toString());
+
+            }
+
+        });
     }
 
+    private int getFoodType(int idd){
+        if(idd == rbDashVeg.getId())
+            return 1;
+        else if(idd == rbDashNV.getId())
+            return 2;
+        else
+            return 3;
+
+    }
     private void setgender() {
         if (gender.equals("male"))
             rbMale.setChecked(true);

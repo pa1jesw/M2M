@@ -1,110 +1,115 @@
+
 package com.pawanjeswani.mm.model;
 
+
 public class userpojo {
+    //Request send this params
 
-    String Uname,UAge,Uemail,UpicUrl,Uwork,UDesc,Ulat,Ulon;
-    int UGender,UFoodPr;
-    int[] URests;
+    private String fbId;
+    private String name;
+    private String age;
+    private String email;
+    private String gender;
+    private String profileUrl;
+    private String work;
+    private String description;
+    private String foodType;
+    private String interestedRestaurants;
 
-    public userpojo(String uname, String UAge, String uemail, int UGender, String upicUrl, String uwork, String UDesc, int UFoodPr, String ulat, String ulon, int[] URests) {
-        Uname = uname;
-        this.UAge = UAge;
-        Uemail = uemail;
-        UpicUrl = upicUrl;
-        Uwork = uwork;
-        this.UDesc = UDesc;
-        Ulat = ulat;
-        Ulon = ulon;
-        this.UGender = UGender;
-        this.UFoodPr = UFoodPr;
-        this.URests = URests;
+    public userpojo( String fbId, String name, String age, String email, String gender, String profileUrl, String work, String description, String foodType, String interestedRestaurants) {
+
+        this.fbId = fbId;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.gender = gender;
+        this.profileUrl = profileUrl;
+        this.work = work;
+        this.description = description;
+        this.foodType = foodType;
+        this.interestedRestaurants = interestedRestaurants;
     }
 
-    public String getUname() {
-        return Uname;
+
+    public String getFbId() {
+        return fbId;
     }
 
-    public void setUname(String uname) {
-        Uname = uname;
+    public void setFbId(String fbId) {
+        this.fbId = fbId;
     }
 
-    public String getUAge() {
-        return UAge;
+    public String getName() {
+        return name;
     }
 
-    public void setUAge(String UAge) {
-        this.UAge = UAge;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getUemail() {
-        return Uemail;
+    public String getAge() {
+        return age;
     }
 
-    public void setUemail(String uemail) {
-        Uemail = uemail;
+    public void setAge(String age) {
+        this.age = age;
     }
 
-    public String getUpicUrl() {
-        return UpicUrl;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUpicUrl(String upicUrl) {
-        UpicUrl = upicUrl;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getUwork() {
-        return Uwork;
+    public String getGender() {
+        return gender;
     }
 
-    public void setUwork(String uwork) {
-        Uwork = uwork;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
-    public String getUDesc() {
-        return UDesc;
+    public String getProfileUrl() {
+        return profileUrl;
     }
 
-    public void setUDesc(String UDesc) {
-        this.UDesc = UDesc;
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
     }
 
-    public String getUlat() {
-        return Ulat;
+    public String getWork() {
+        return work;
     }
 
-    public void setUlat(String ulat) {
-        Ulat = ulat;
+    public void setWork(String work) {
+        this.work = work;
     }
 
-    public String getUlon() {
-        return Ulon;
+    public String getDescription() {
+        return description;
     }
 
-    public void setUlon(String ulon) {
-        Ulon = ulon;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public int getUGender() {
-        return UGender;
+    public String getFoodType() {
+        return foodType;
     }
 
-    public void setUGender(int UGender) {
-        this.UGender = UGender;
+    public void setFoodType(String foodType) {
+        this.foodType = foodType;
     }
 
-    public int getUFoodPr() {
-        return UFoodPr;
+    public String getInterestedRestaurants() {
+        return interestedRestaurants;
     }
 
-    public void setUFoodPr(int UFoodPr) {
-        this.UFoodPr = UFoodPr;
+    public void setInterestedRestaurants(String interestedRestaurants) {
+        this.interestedRestaurants = interestedRestaurants;
     }
 
-    public int[] getURests() {
-        return URests;
-    }
 
-    public void setURests(int[] URests) {
-        this.URests = URests;
-    }
 }

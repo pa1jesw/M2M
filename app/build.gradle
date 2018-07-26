@@ -40,7 +40,7 @@ dependencies {
     //internet checker api
     implementation 'com.novoda:merlin:1.1.7'
     //location gms google play servies
-    compile 'com.google.android.gms:play-services:12.0.1'
+    implementation 'com.google.android.gms:play-services:12.0.1'
     //dotsindidcator library
     implementation 'me.relex:circleindicator:1.2.2@aar'
     //editText Library
@@ -54,9 +54,11 @@ dependencies {
     //custom spinner
     //Faceboksdk
     implementation 'com.facebook.android:facebook-login:[4,5)'
-    //retrofit api implementation
+    //retrofit apis implementation
+    implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     //picasso image downloader
-    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 }
