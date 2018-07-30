@@ -19,7 +19,7 @@ public class restlist {
      * @param name
      */
     public restlist(String id, String name) {
-        super();
+
         this.id = id;
         this.name = name;
     }
