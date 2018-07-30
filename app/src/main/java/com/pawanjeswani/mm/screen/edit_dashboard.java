@@ -139,11 +139,11 @@ public class edit_dashboard extends AppCompatActivity
                 if(isDataCorret())
                 {
                     Toast.makeText(edit_dashboard.this, "insert User calling", Toast.LENGTH_LONG).show();
-                    insertUser();
+                    //insertUser();
                     btnSavePro.setEnabled(false);
-                    /*Intent i = new Intent(getApplicationContext(),MainScreen.class);
+                    Intent i = new Intent(getApplicationContext(),MainScreen.class);
                     startActivity(i);
-                    finish();*/
+                    finish();
                 }
             }
         });

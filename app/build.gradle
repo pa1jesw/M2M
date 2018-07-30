@@ -37,6 +37,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+    //Magic textView for fonts libarary
+    //implementation 'com.ivankocijan:MagicViews:3.3.1@aar'
     //internet checker api
     implementation 'com.novoda:merlin:1.1.7'
     //location gms google play servies
@@ -61,4 +63,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     //picasso image downloader
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    //QuickBlox Chat Adependencies
+   // implementation "com.quickblox:quickblox-android-sdk-core:2.5.1@aar"
+    //implementation "com.quickblox:quickblox-android-sdk-chat:2.6.1"
+
 }
