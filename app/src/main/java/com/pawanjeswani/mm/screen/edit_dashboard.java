@@ -56,10 +56,10 @@ public class edit_dashboard extends AppCompatActivity
     private RadioGroup rgDashGender, rgDashFoodPr;
     private LiquidRadioButton rbMale, rbFemale, rbDashVeg, rbDashNV, rbDashVegan;
     private Spinner spnDashRestlist;
-    private String fname = "", lname = "", email = "", id = "", birthdate = "", profile_url = "", gender = "", RestList="";
+    private String fname = "", lname = "", email = "", id = "", birthdate = "", profile_url = "",  RestList="";
     private Calendar dob = Calendar.getInstance();
     private userpojo dashuser;
-    private int selected_food=1;
+    private int selected_food=1,age=18,gender=2;
     //public static final String Root_Url = "https://nearby-restaurant.000webhostapp.com/";
     double uDashlat, uDashlon;
     private GoogleApiClient mLocationClient;
@@ -106,13 +106,13 @@ public class edit_dashboard extends AppCompatActivity
         id = i.getStringExtra("fbid");
         birthdate = i.getStringExtra("birthdate");
         profile_url = i.getStringExtra("profilepic");
-        gender = i.getStringExtra("gender");
+        //gender = i.getStringExtra("gender");
 
         etDashUname.setText("" + fname + " " + lname);
         setAge();
-        setgender();
+        //setgender();
         selected_food = rgDashGender.getCheckedRadioButtonId();
-
+        RerofitInstance rr = new RerofitInstance();
 
 
 
@@ -139,11 +139,11 @@ public class edit_dashboard extends AppCompatActivity
                 if(isDataCorret())
                 {
                     Toast.makeText(edit_dashboard.this, "insert User calling", Toast.LENGTH_LONG).show();
-                    //insertUser();
+                    insertUser();
                     btnSavePro.setEnabled(false);
-                    Intent i = new Intent(getApplicationContext(),MainScreen.class);
+                    /*Intent i = new Intent(getApplicationContext(),MainScreen.class);
                     startActivity(i);
-                    finish();
+                    finish();*/
                 }
             }
         });
@@ -153,10 +153,10 @@ public class edit_dashboard extends AppCompatActivity
 
     private void insertUser() {
         Call<response_user_id> callingurl =
-                ApiUtils.getResponseUser().insertUser(fname+" "+lname,""+getAge(dob),email,gender,profile_url,
+                ApiUtils.getResponseUser().insertUser(fname+" "+lname,getAge(dob),email,gender,profile_url,
                         etDashUwork.getText().toString().trim(),
                         etEtDashUDesc.getText().toString().trim(),
-                        ""+getFoodType(selected_food),"123,456,789");
+                        getFoodType(selected_food),"123,456,789");
         /*try {
             callingurl.execute();
         } catch (IOException e) {
@@ -171,7 +171,7 @@ public class edit_dashboard extends AppCompatActivity
                 }
 
                 else
-                    etEtDashUDesc.setText("is nnot succecfull"+response.body());
+                    etEtDashUDesc.setText("is nnot succecfull"+response.code());
             }
 
             @Override
@@ -192,12 +192,12 @@ public class edit_dashboard extends AppCompatActivity
             return 3;
 
     }
-    private void setgender() {
+    /*private void setgender() {
         if (gender.equals("male"))
             rbMale.setChecked(true);
         else
             rbFemale.setChecked(true);
-    }
+    }*/
 
     private void setAge() {
         //getting age from dob

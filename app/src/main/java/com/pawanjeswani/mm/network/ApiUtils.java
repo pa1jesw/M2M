@@ -7,7 +7,7 @@ public class ApiUtils {
 
     }
 
-    public static final String Base_url = "https://nearby-restaurant.000webhostapp.com/";
+    public static final String Base_url = "http://gotechservices.in/meet2munch/ ";
     public static insertuserapi getResponseUser(){
         return RerofitInstance.getClient(Base_url).create(insertuserapi.class);
     }
