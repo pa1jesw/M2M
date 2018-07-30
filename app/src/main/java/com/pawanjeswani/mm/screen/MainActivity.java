@@ -74,13 +74,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(),edit_profile.class);
-                i.putExtra("fname","firstname &");
-                i.putExtra("lname","lastname from fb");
-                i.putExtra("email","email");
-                i.putExtra("fbid","fb unique id");
+                i.putExtra("fname","john &");
+                i.putExtra("lname","doe");
+                i.putExtra("email","email.com");
+                i.putExtra("fbid",124545);
                 i.putExtra("birthdate","01/02/1995");
                 i.putExtra("profilepic","profile_url by fb");
-                i.putExtra("gender","female");
+                i.putExtra("gender","male");
                 startActivity(i);
                 finish();
             }

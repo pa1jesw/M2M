@@ -14,6 +14,7 @@ public class RerofitInstance {
     private static Retrofit retrofit;
     private static Gson gson = new GsonBuilder().setLenient().create();
 
+    //public static final String Base_url = "http://gotechservices.in/meet2munch/";
 
     public static Retrofit getClient(String BASE_URL) {
         if (retrofit == null) {
@@ -25,5 +26,4 @@ public class RerofitInstance {
         }
         return retrofit;
     }
-
 }

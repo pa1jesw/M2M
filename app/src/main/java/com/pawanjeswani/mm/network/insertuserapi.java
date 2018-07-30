@@ -17,7 +17,7 @@ public interface insertuserapi {
 
 
     @GET("facebook_details_insert.php")
-    Call<response_user_id> insertUser(
+    Call<String > insertUser(
                     @Query("name") String name,
                     @Query("age") int age,
                     @Query("email") String email,
