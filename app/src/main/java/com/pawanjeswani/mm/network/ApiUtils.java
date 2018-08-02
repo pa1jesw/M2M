@@ -16,4 +16,8 @@ public class ApiUtils {
     public static apiinter getRestList(){
         return RerofitInstance.getClient(Base_url).create(apiinter.class);
     }
+    public static user_details_if getUserDet(){
+        return RerofitInstance.getClient(Base_url).create(user_details_if.class);
+    }
+
 }

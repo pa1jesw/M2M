@@ -14,13 +14,7 @@
     <string name="fb_login_protocol_scheme">fb2434251726603876</string>
 
     <string-array name="nearrestList">
-        <item name="1">Domino's Pizza</item>
-        <item name="2">Roti N</item>
-        <item name="3">Amar Fast Food n Restaurant</item>
-        <item name="4">Brewbakes</item>
-        <item name="5">McDonald's</item>
-        <item name="6">The J</item>
-        <item name="7">Prasad Food Divine</item>
+        <item name="1">Dumy Rest's Pizza</item>
     </string-array>
     <string name="title_activity_navdraw">navdraw</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

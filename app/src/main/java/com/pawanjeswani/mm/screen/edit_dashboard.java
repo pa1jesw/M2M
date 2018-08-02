@@ -23,6 +23,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.novoda.merlin.Merlin;
 import com.pawanjeswani.mm.R;
 import com.pawanjeswani.mm.model.response_user_id;
 import com.pawanjeswani.mm.model.restLispojo;
@@ -53,11 +54,12 @@ public class edit_dashboard extends AppCompatActivity
     private RadioGroup rgDashGender, rgDashFoodPr;
     private LiquidRadioButton rbMale, rbFemale, rbDashVeg, rbDashNV, rbDashVegan;
     private Spinner spnDashRestlist;
-    private String fname = "", lname = "", email = "", id = "", birthdate = "", profile_url = "",  RestList="";
+    private String fname = "", lname = "", email = "", id = "", birthdate = "", profile_url = "",genderst="",user_id="33";
+    private String [] RestList;
     private Calendar dob = Calendar.getInstance();
     private userpojo dashuser;
     private int selected_food=1,age=18,gender=2;
-    //public static final String Root_Url = "https://nearby-restaurant.000webhostapp.com/";
+    private userpojo userdetails;
     double uDashlat=0.0, uDashlon=0.0;
     private GoogleApiClient mLocationClient;
     private Location mLastLoc;
@@ -66,6 +68,9 @@ public class edit_dashboard extends AppCompatActivity
     private RadioButton dumRB;
     private restLispojo uDashResponse;
     private restlist rlist;
+    private List<restlist> nearbyRestaurants;
+    ArrayAdapter<String> restListAdap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,17 +103,32 @@ public class edit_dashboard extends AppCompatActivity
 
         //getting data from fb
         Intent i = getIntent();
+        if(!i.equals(null))
+        {
         fname = i.getStringExtra("fname");
         lname = i.getStringExtra("lname");
         email = i.getStringExtra("email");
         id = i.getStringExtra("fbid");
         birthdate = i.getStringExtra("birthdate");
         profile_url = i.getStringExtra("profilepic");
-        //gender = i.getStringExtra("gender");
+        genderst = i.getStringExtra("gender");
+        }
+        else {
+            fname = "jen";
+            lname = "doe";
+            email = "jenDoh@gmail.com";
+            id = "45789632541";
+            birthdate = "01/02/1995";
+            profile_url = "jendeprofilepic.com";
+            genderst = "female";
+        }
+
+        if(genderst.equals("male"))
+            gender=1;
 
         etDashUname.setText("" + fname + " " + lname);
         setAge();
-        //setgender();
+        setgender();
         selected_food = rgDashGender.getCheckedRadioButtonId();
         RerofitInstance rr = new RerofitInstance();
 
@@ -139,9 +159,10 @@ public class edit_dashboard extends AppCompatActivity
                     Toast.makeText(edit_dashboard.this, "insert User calling", Toast.LENGTH_LONG).show();
                     insertUser();
                     btnSavePro.setEnabled(false);
-                    /*Intent i = new Intent(getApplicationContext(),MainScreen.class);
+                    Intent i = new Intent(getApplicationContext(),MainScreen.class);
+                    i.putExtra("user_id",user_id);
                     startActivity(i);
-                    finish();*/
+                    finish();
                 }
             }
         });
@@ -154,9 +175,14 @@ public class edit_dashboard extends AppCompatActivity
             @Override
             public void onResponse(Call<restLispojo> call, Response<restLispojo> response) {
                 uDashResponse = response.body();
-                uDashResponse.getNearbyRestaurants();
-
-
+                nearbyRestaurants=uDashResponse.getNearbyRestaurants();
+                RestList= new String[nearbyRestaurants.size()];
+                for(int i =0;i< nearbyRestaurants.size();i++) {
+                    rlist = nearbyRestaurants.get(i);
+                    RestList[i] = "" + rlist.getName();
+                }
+                restAdapter= new ArrayAdapter<String> (getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,RestList);
+                spnDashRestlist.setAdapter(restAdapter);
             }
 
             @Override
@@ -165,6 +191,7 @@ public class edit_dashboard extends AppCompatActivity
             }
         });
     }
+
     private void insertUser() {
         Call<String > callingurl =
                 ApiUtils.getResponseUser().insertUser(fname+" "+lname,getAge(dob),email,gender,profile_url,
@@ -175,12 +202,13 @@ public class edit_dashboard extends AppCompatActivity
         callingurl.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                etEtDashUDesc.setText(response.body());
+                etEtDashUDesc.setText(response.message());
+                user_id = response.body();
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                etDashUwork.setText(""+t.getMessage());
+                etEtDashUDesc.setText(""+t.getMessage());
             }
         });
     }
@@ -194,12 +222,12 @@ public class edit_dashboard extends AppCompatActivity
             return 3;
 
     }
-    /*private void setgender() {
-        if (gender.equals("male"))
+    private void setgender() {
+        if (genderst.equals("male"))
             rbMale.setChecked(true);
         else
             rbFemale.setChecked(true);
-    }*/
+    }
 
     private void setAge() {
         //getting age from dob
@@ -255,7 +283,9 @@ public class edit_dashboard extends AppCompatActivity
             uDashlat = mLastLoc.getLatitude();
             uDashlon = mLastLoc.getLongitude();
             getRestList();
-            etEtDashUDesc.setText("latLon"+uDashlat+uDashlon);
+        }
+        else {
+
         }
     }
 
@@ -269,14 +299,7 @@ public class edit_dashboard extends AppCompatActivity
         Toast.makeText(this, "Connfailed", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(mLocationClient!=null)
-        {
-            mLocationClient.connect();
-        }
-    }
+
     private boolean isDataCorret(){
         if(etDashUname.getText().toString().length()<3)
             {
@@ -304,5 +327,13 @@ public class edit_dashboard extends AppCompatActivity
         }
         else
             return true;
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mLocationClient!=null)
+        {
+            mLocationClient.connect();
+        }
     }
 }

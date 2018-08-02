@@ -53,6 +53,7 @@
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".screen.User_main"
+            android:theme="@style/AppTheme.NoActionBar"
             ></activity>
         <activity
             android:name=".screen.MainScreen"

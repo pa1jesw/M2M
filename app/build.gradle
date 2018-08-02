@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
@@ -64,7 +65,10 @@ dependencies {
     //picasso image downloader
     implementation 'com.squareup.picasso:picasso:2.5.2'
     //QuickBlox Chat Adependencies
-   // implementation "com.quickblox:quickblox-android-sdk-core:2.5.1@aar"
-    //implementation "com.quickblox:quickblox-android-sdk-chat:2.6.1"
+    implementation 'com.quickblox:quickblox-android-sdk-chat:3.7.0'
+    implementation 'com.quickblox:quickblox-android-sdk-content:3.7.0'
+    implementation 'com.quickblox:quickblox-android-sdk-messages:3.7.0'
+    implementation 'com.quickblox:quickblox-android-sdk-customobjects:3.7.0'
+
 
 }

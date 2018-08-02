@@ -5,6 +5,7 @@ package com.pawanjeswani.mm.model;
 public class userpojo {
     //Request send this params
 
+    private String Id;
     private String fbId;
     private String name;
     private String age;
@@ -16,8 +17,9 @@ public class userpojo {
     private String foodType;
     private String interestedRestaurants;
 
-    public userpojo( String fbId, String name, String age, String email, String gender, String profileUrl, String work, String description, String foodType, String interestedRestaurants) {
+    public userpojo( String Id,String fbId, String name, String age, String email, String gender, String profileUrl, String work, String description, String foodType, String interestedRestaurants) {
 
+        this.Id=Id;
         this.fbId = fbId;
         this.name = name;
         this.age = age;
@@ -30,6 +32,13 @@ public class userpojo {
         this.interestedRestaurants = interestedRestaurants;
     }
 
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
 
     public String getFbId() {
         return fbId;

@@ -1,5 +1,6 @@
 package com.pawanjeswani.mm.screen;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -18,13 +19,14 @@ import java.util.ArrayList;
 
 public class User_main extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private String user_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
+/*
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -34,7 +36,12 @@ public class User_main extends AppCompatActivity implements NavigationView.OnNav
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+*/
+        Intent i = getIntent();
+        if(!i.equals(null))
+        {
+        user_id = i.getStringExtra("user_id");
+        }
     }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

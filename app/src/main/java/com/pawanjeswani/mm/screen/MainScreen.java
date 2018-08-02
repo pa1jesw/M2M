@@ -1,5 +1,6 @@
 package com.pawanjeswani.mm.screen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,13 +15,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.pawanjeswani.mm.R;
 import com.pawanjeswani.mm.adapter.near_users_list_adapter;
 import com.pawanjeswani.mm.model.userpojo;
+import com.pawanjeswani.mm.model.userpojoRes;
+import com.pawanjeswani.mm.network.ApiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,7 +37,9 @@ public class MainScreen extends AppCompatActivity
     private near_users_list_adapter nearUsersListAdapter;
     private ArrayList<userpojo> userslist = new ArrayList<>();
     private userpojo dumuser;
-
+    private userpojoRes gotUserDetails;
+    private String user_id;
+    private int curUId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,12 +47,22 @@ public class MainScreen extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dumuser = new userpojo("4578963","pawan jeswani","45","789","1",
+        //adding dummy users data in recycler view
+        dumuser = new userpojo("33","4578963","pawan jeswani","45","789","1",
                 "sdsd","sdsd","sdsd","dsdss","dsdsdsd");
         userslist.add(dumuser);
         userslist.add(dumuser);
         userslist.add(dumuser);
         userslist.add(dumuser);
+
+        Intent i = getIntent();
+        if(!i.equals(null))
+        {
+            user_id = i.getStringExtra("user_id");
+        }
+        //getting user id
+        curUId = getCurUserId();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -60,6 +80,24 @@ public class MainScreen extends AppCompatActivity
 
     }
 
+    private int getCurUserId(){
+        Call<userpojoRes> gettingCurrentUSer = ApiUtils.getUserDet().get_details(Integer.parseInt(user_id));
+
+        gettingCurrentUSer.enqueue(new Callback<userpojoRes>() {
+            @Override
+            public void onResponse(Call<userpojoRes> call, Response<userpojoRes> response) {
+                gotUserDetails = response.body();
+                user_id = gotUserDetails.getId();
+            }
+
+            @Override
+            public void onFailure(Call<userpojoRes> call, Throwable t) {
+                Toast.makeText(MainScreen.this,
+                        ""+t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        return Integer.parseInt(user_id);
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
