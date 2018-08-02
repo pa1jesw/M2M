@@ -19,5 +19,11 @@ public class ApiUtils {
     public static user_details_if getUserDet(){
         return RerofitInstance.getClient(Base_url).create(user_details_if.class);
     }
+    public static getusersapi getnearusers(){
+        return RerofitInstance.getClient(Base_url).create(getusersapi.class);
+    }
+    public static api_match getmatchres(){
+        return RerofitInstance.getClient(Base_url).create(api_match.class);
+    }
 
 }

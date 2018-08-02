@@ -62,7 +62,7 @@
 
 
         <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/iv_rec_user"
+            android:id="@+id/iv_detail_user"
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_gravity="center"
@@ -73,7 +73,7 @@
             app:civ_border_width="2dp" />
 
         <TextView
-            android:id="@+id/tv_rec_username"
+            android:id="@+id/tv_detail_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -87,7 +87,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_rec_user_age"
+            android:id="@+id/tv_detail_user_age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -101,7 +101,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/tv_rec_user_work"
+            android:id="@+id/tv_detail_user_work"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -127,7 +127,7 @@
         tools:layout_editor_absoluteX="117dp">
 
         <Button
-            android:id="@+id/btn_rec_Grabit"
+            android:id="@+id/btn_detail_Grabit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -138,7 +138,7 @@
             android:textColor="#9b9b9b" />
 
         <Button
-            android:id="@+id/btn_rec_ignore"
+            android:id="@+id/btn_detail_ignore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -151,7 +151,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_um_uname"
+        android:id="@+id/tv_detail_uname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -163,7 +163,7 @@
         app:layout_constraintTop_toTopOf="@+id/view" />
 
     <TextView
-        android:id="@+id/tv_um_udesc"
+        android:id="@+id/tv_detail_udesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"

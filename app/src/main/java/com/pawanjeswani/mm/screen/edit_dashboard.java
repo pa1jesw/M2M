@@ -100,7 +100,6 @@ public class edit_dashboard extends AppCompatActivity
             }
         });
 
-
         //getting data from fb
         Intent i = getIntent();
         if(!i.equals(null))
@@ -146,27 +145,31 @@ public class edit_dashboard extends AppCompatActivity
         builder.addOnConnectionFailedListener(this);
         mLocationClient = builder.build();
 
-        //retrofit url setting
-        //apiinter api = RerofitInstance.getRetrofitInstance().create(apiinter.class);
-
-        //save user details on server
         btnSavePro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(btnSavePro.isEnabled())
-                if(isDataCorret())
-                {
-                    Toast.makeText(edit_dashboard.this, "insert User calling", Toast.LENGTH_LONG).show();
-                    insertUser();
-                    btnSavePro.setEnabled(false);
-                    Intent i = new Intent(getApplicationContext(),MainScreen.class);
-                    i.putExtra("user_id",user_id);
-                    startActivity(i);
-                    finish();
-                }
+                    if(isDataCorret())
+                    {
+                        Toast.makeText(edit_dashboard.this, "insert User calling", Toast.LENGTH_LONG).show();
+                        insertUser();
+                        Intent i = new Intent(getApplicationContext(),MainScreen.class);
+                        i.putExtra("user_id",user_id);
+                        i.putExtra("lat",uDashlat);
+                        i.putExtra("lon",uDashlon);
+                      //  startActivity(i);
+                      //  finish();
+
+                    }
             }
         });
+
     }
+
+    private void saveUserandpass() {
+        //save user details on server
+    }
+
 
     private void getRestList() {
         Call<restLispojo> rl = ApiUtils.getRestList().get_list(uDashlat,uDashlon);
@@ -194,7 +197,7 @@ public class edit_dashboard extends AppCompatActivity
 
     private void insertUser() {
         Call<String > callingurl =
-                ApiUtils.getResponseUser().insertUser(fname+" "+lname,getAge(dob),email,gender,profile_url,
+                ApiUtils.getResponseUser().insertUser(fname+" "+lname,getAge(dob),email,1,profile_url,
                         etDashUwork.getText().toString().trim(),
                         etEtDashUDesc.getText().toString().trim(),
                         getFoodType(selected_food),"123,456,789");
@@ -202,13 +205,14 @@ public class edit_dashboard extends AppCompatActivity
         callingurl.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                etEtDashUDesc.setText(response.message());
+                etEtDashUDesc.setText(response.body());
                 user_id = response.body();
+                Toast.makeText(edit_dashboard.this, ""+user_id, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                etEtDashUDesc.setText(""+t.getMessage());
+                //etEtDashUDesc.setText(""+call.toString());
             }
         });
     }

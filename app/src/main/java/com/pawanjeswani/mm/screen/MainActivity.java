@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         fbtnfb = findViewById(R.id.btnFBC);
         skipfb = findViewById(R.id.btnskip);
         checklocperm();
+
         skipfb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

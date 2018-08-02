@@ -10,22 +10,37 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.pawanjeswani.mm.R;
 import com.pawanjeswani.mm.adapter.near_users_list_adapter;
 import com.pawanjeswani.mm.model.userpojo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class User_main extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class User_main extends AppCompatActivity{
 
-    private String user_id;
+    private String user_id,name,work,uname,desc;
+    private int age,id,fbid;
+    private TextView tv_detail_uname,tv_detail_udesc,tv_detail_username,tv_detail_user_age,tv_detail_user_work;
+    private  Button btn_detail_Grabit,btn_detail_ignore;
+    private com.mikhaellopez.circularimageview.CircularImageView iv_detail_user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        tv_detail_uname=findViewById(R.id.tv_detail_uname);
+        tv_detail_udesc=findViewById(R.id.tv_detail_udesc);
+        tv_detail_user_age=findViewById(R.id.tv_detail_user_age);
+        tv_detail_user_work=findViewById(R.id.tv_detail_user_work);
+        btn_detail_Grabit=findViewById(R.id.btn_detail_Grabit);
+        btn_detail_ignore=findViewById(R.id.btn_detail_ignore);
+        tv_detail_username=findViewById(R.id.tv_detail_username);
+        iv_detail_user=findViewById(R.id.iv_detail_user);
 /*
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -41,9 +56,33 @@ public class User_main extends AppCompatActivity implements NavigationView.OnNav
         if(!i.equals(null))
         {
         user_id = i.getStringExtra("user_id");
+        name = i.getStringExtra("name");
+        fbid = i.getIntExtra("fbid",457896321);
+        work = i.getStringExtra("work");
+        age = i.getIntExtra("age",20);
         }
+        tv_detail_username.setText(name);
+        tv_detail_user_work.setText(work);
+        tv_detail_user_age.setText(age);
+        tv_detail_udesc.setText(work);
+        Picasso.with(this).load("https://graph.facebook.com/"+fbid+"/picture?type=large")
+                .error(R.drawable.intropg1).into(iv_detail_user);
+
+        btn_detail_ignore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        btn_detail_Grabit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
-    @SuppressWarnings("StatementWithEmptyBody")
+
+  /*  @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -63,5 +102,5 @@ public class User_main extends AppCompatActivity implements NavigationView.OnNav
 
         }
     return true;
-    }
+    }*/
 }
