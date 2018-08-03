@@ -71,6 +71,12 @@ public class MainScreen extends AppCompatActivity
             umainlat= i.getDoubleExtra("lat",0.0);
             umainlon= i.getDoubleExtra("lon",0.0);
         }
+        else
+        {
+            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
         //getting user id
         curUId = getCurUserId();
 

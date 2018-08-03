@@ -1,6 +1,5 @@
 package com.pawanjeswani.mm.network;
 
-import com.pawanjeswani.mm.model.listNearbyUsers;
 import com.pawanjeswani.mm.model.userpojoRes;
 
 import java.util.List;
