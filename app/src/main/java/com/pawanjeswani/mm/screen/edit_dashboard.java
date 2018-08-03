@@ -102,8 +102,8 @@ public class edit_dashboard extends AppCompatActivity
 
         //getting data from fb
         Intent i = getIntent();
-        if(!i.equals(null))
-        {
+        //if(!i.equals(null))
+        //{
         fname = i.getStringExtra("fname");
         lname = i.getStringExtra("lname");
         email = i.getStringExtra("email");
@@ -111,8 +111,8 @@ public class edit_dashboard extends AppCompatActivity
         birthdate = i.getStringExtra("birthdate");
         profile_url = i.getStringExtra("profilepic");
         genderst = i.getStringExtra("gender");
-        }
-        else {
+        //}
+        /*else {
             fname = "jen";
             lname = "doe";
             email = "jenDoh@gmail.com";
@@ -120,7 +120,7 @@ public class edit_dashboard extends AppCompatActivity
             birthdate = "01/02/1995";
             profile_url = "jendeprofilepic.com";
             genderst = "female";
-        }
+        }*/
 
         if(genderst.equals("male"))
             gender=1;
@@ -157,8 +157,8 @@ public class edit_dashboard extends AppCompatActivity
                         i.putExtra("user_id",user_id);
                         i.putExtra("lat",uDashlat);
                         i.putExtra("lon",uDashlon);
-                      //  startActivity(i);
-                      //  finish();
+                        startActivity(i);
+                        finish();
 
                     }
             }
@@ -196,8 +196,9 @@ public class edit_dashboard extends AppCompatActivity
     }
 
     private void insertUser() {
+
         Call<String > callingurl =
-                ApiUtils.getResponseUser().insertUser(fname+" "+lname,getAge(dob),email,1,profile_url,
+                ApiUtils.getResponseUser().insertUser(""+fname+" "+lname,getAge(dob),"pawanjes@gmail.com",gender, id,
                         etDashUwork.getText().toString().trim(),
                         etEtDashUDesc.getText().toString().trim(),
                         getFoodType(selected_food),"123,456,789");
