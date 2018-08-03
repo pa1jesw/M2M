@@ -1,0 +1,212 @@
+package com.pawanjeswani.mm.screen;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.pawanjeswani.mm.R;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.session.QBSession;
+import com.quickblox.auth.session.QBSettings;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
+
+import org.jivesoftware.smack.chat.Chat;
+
+
+public class ChatListAct extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+
+    boolean isPswdGot;
+    String Pswd="7895dfghjl",email;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    SharedPreferences sharedPrefs;
+    SharedPreferences.Editor editor;
+    static final String  APP_ID = "72622";
+    static final String  AUTH_KEY = "S7nmy393teRB2Zm";
+    static final String  AUTH_SECRET = "QhbFUhd5jwKWjAB";
+    static final String  ACCOUNT_KEY = "CMe1J7yE-4s-r16g-s-Q";
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat_list);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        LayoutInflater layoutif = getLayoutInflater();
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        intializeFramework();
+        registerSession();
+
+        //sharedPrefernce for getPswd
+        sharedPrefs = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
+        //showing 1st time for getting pswd
+      //  if (sharedPrefs.getBoolean("isgetPswd", false)) {
+            //firstTimePassword Asking
+            final View view = layoutif.inflate(R.layout.chat_pswd, null);
+            final AlertDialog alertDialog = new AlertDialog.Builder(ChatListAct.this).create();
+            alertDialog.setTitle("Enter Password for Chats");
+            alertDialog.setCancelable(false);
+            final EditText etPswd = (EditText) view.findViewById(R.id.et_dialog_chat_pswd);
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (etPswd.getText().length() != 8) {
+                        etPswd.setError("Please Enter valid password\n Not Less than 8");
+                        etPswd.requestFocus();
+                        return;
+
+                    }
+                    else {
+                        Pswd = etPswd.getText().toString();
+                        isPswdGot = true;
+                        createQBUser();
+                        editor.putBoolean("isgetPswd", isPswdGot);
+                        editor.putString("pswdUser", Pswd);
+                        editor.commit();
+                    }
+                }
+            });
+            alertDialog.setView(view);
+            alertDialog.show();
+     //   }
+        //getting uemail
+        Intent i = getIntent();
+        if(!i.equals(null)){
+            email = i.getStringExtra("uem");
+            editor.putString("chatemail", email);
+            editor.commit();
+        }
+
+        createQBUser();
+    }
+
+    private void createQBUser() {
+
+            //if (!sharedPrefs.getBoolean("isgetPswd", false) && !sharedPrefs.getString("chatemail","").isEmpty()) {
+            QBUser chatUser = new QBUser(email,Pswd);
+
+            QBUsers.signUp(chatUser).performAsync(new QBEntityCallback<QBUser>() {
+                @Override
+                public void onSuccess(QBUser qbUser, Bundle bundle) {
+                    Toast.makeText(ChatListAct.this,
+                            "created user with "+qbUser.getPassword(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Toast.makeText(ChatListAct.this,
+                            "error in signup"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+    }
+
+    private void registerSession() {
+        QBAuth.createSession().performAsync(new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession qbSession, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Toast.makeText(ChatListAct.this,
+                        "err register"+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void intializeFramework() {
+        QBSettings.getInstance().init(getApplicationContext(),APP_ID,AUTH_KEY,AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.chat_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_Chat) {
+            // Handle the camera action
+        } else if (id == R.id.nav_Request) {
+
+        } else if (id == R.id.nav_Edit) {
+
+        } else if (id == R.id.nav_About) {
+
+        } else if (id == R.id.nav_Help) {
+
+        } else if (id == R.id.nav_filter) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.END);
+        return true;
+    }
+}

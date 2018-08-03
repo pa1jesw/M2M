@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single"
+        >
+        <item
+            android:id="@+id/nav_cm_Chat"
+            android:icon="@drawable/msgicon"
+            android:title="Chats" />
+        <item
+            android:id="@+id/nav_cm_Request"
+            android:icon="@drawable/requesticon"
+            android:title="Request" />
+        <item
+            android:id="@+id/nav_cm_filter"
+            android:icon="@drawable/filtericon"
+            android:title="Filter" />
+        <item
+            android:id="@+id/nav_cm_Edit"
+            android:icon="@drawable/editicon"
+            android:title="Edit " />
+        <item
+            android:id="@+id/nav_cm_About"
+            android:icon="@drawable/info"
+            android:title="About" />
+        <item
+            android:id="@+id/nav_cm_Help"
+            android:icon="@drawable/questionicon"
+            android:title="Help" />
+
+    </group>
+
+</menu>

@@ -38,19 +38,26 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
 
     @Override
     public void onBindViewHolder(@NonNull user_holder holder, int position) {
-        userpojoRes user = mData.get(position);
+        final userpojoRes user = mData.get(position);
         holder.tv_rec_uname.setText(""+user.getName());
         holder.tv_rec_uage.setText(""+user.getAge());
         holder.tv_rec_uwork.setText(""+user.getWork());
         Picasso.with(activity).load("https://graph.facebook.com/"+user.getFbId()+"/picture?type=large")
                 .error(R.drawable.intropg1).into(holder.iv_rec_user);
-        Intent i = new Intent(activity, User_main.class);
-        i.putExtra("user_id",user.getId());
-        i.putExtra("name",user.getName());
-        i.putExtra("age",user.getAge());
-        i.putExtra("fbid",user.getFbId());
-        i.putExtra("work",user.getWork());
-        activity.startActivity(i);
+        holder.iv_rec_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(activity, User_main.class);
+                i.putExtra("user_id",user.getId());
+                i.putExtra("name",user.getName());
+                i.putExtra("emaill",user.getEmail());
+                i.putExtra("age",user.getAge());
+                i.putExtra("fbid",user.getFbId());
+                i.putExtra("work",user.getWork());
+                activity.startActivity(i);
+            }
+        });
+
     }
 
     @Override

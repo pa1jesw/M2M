@@ -35,7 +35,7 @@ public class MainScreen extends AppCompatActivity
     private userpojoRes dumuser;
     private userpojoRes gotUserDetails,tempUser;
     private double umainlat,umainlon;
-    private String user_id;
+    private String user_id, email="";
     private int curUId;
     //private ArrayList<userpojoRes> usersList;
     private List<userpojoRes> usersList = new ArrayList<>();;
@@ -70,24 +70,23 @@ public class MainScreen extends AppCompatActivity
             user_id = i.getStringExtra("user_id");
             umainlat= i.getDoubleExtra("lat",0.0);
             umainlon= i.getDoubleExtra("lon",0.0);
+           email = i.getStringExtra("uemail");
         }
         else
-        {
-            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+            Toast.makeText(this,
+                    "null intent content", Toast.LENGTH_SHORT).show();
         //getting user id
-        curUId = getCurUserId();
 
-        //getting nearbyuserdetails
+        curUId = getCurUserId();
         calnearAPI();
+        //getting nearbyuserdetails
+
 
       //recyclerview setting
         rv_matched_users =findViewById(R.id.users_rv);
         rv_matched_users.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         rv_matched_users.setHasFixedSize(true);
-
+        setRecViewItems(usersList);
     }
 
     private void setRecViewItems(List<userpojoRes> userslist) {

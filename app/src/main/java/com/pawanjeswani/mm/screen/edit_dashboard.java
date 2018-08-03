@@ -1,7 +1,9 @@
 package com.pawanjeswani.mm.screen;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -19,6 +21,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.facebook.Profile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -70,6 +73,10 @@ public class edit_dashboard extends AppCompatActivity
     private restlist rlist;
     private List<restlist> nearbyRestaurants;
     ArrayAdapter<String> restListAdap;
+    boolean isinserted;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    SharedPreferences sharedPrefs;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +107,14 @@ public class edit_dashboard extends AppCompatActivity
             }
         });
 
+        //sharedPrefernce for Facebook json
+        sharedPrefs = getSharedPreferences(MainActivity.MyPREFERENCES, Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
+
         //getting data from fb
         Intent i = getIntent();
-        //if(!i.equals(null))
-        //{
+        if(!i.equals(null))
+        {
         fname = i.getStringExtra("fname");
         lname = i.getStringExtra("lname");
         email = i.getStringExtra("email");
@@ -111,7 +122,7 @@ public class edit_dashboard extends AppCompatActivity
         birthdate = i.getStringExtra("birthdate");
         profile_url = i.getStringExtra("profilepic");
         genderst = i.getStringExtra("gender");
-        //}
+        }
         /*else {
             fname = "jen";
             lname = "doe";
@@ -124,14 +135,10 @@ public class edit_dashboard extends AppCompatActivity
 
         if(genderst.equals("male"))
             gender=1;
-
         etDashUname.setText("" + fname + " " + lname);
         setAge();
         setgender();
         selected_food = rgDashGender.getCheckedRadioButtonId();
-        RerofitInstance rr = new RerofitInstance();
-
-
         try {
             Picasso.with(getApplicationContext()).load("https://graph.facebook.com/1782673958467396/picture?type=large")
             .error(R.drawable.intropg1).into(ivUser);
@@ -148,22 +155,32 @@ public class edit_dashboard extends AppCompatActivity
         btnSavePro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(btnSavePro.isEnabled())
                     if(isDataCorret())
                     {
                         Toast.makeText(edit_dashboard.this, "insert User calling", Toast.LENGTH_LONG).show();
                         insertUser();
-                        Intent i = new Intent(getApplicationContext(),MainScreen.class);
-                        i.putExtra("user_id",user_id);
-                        i.putExtra("lat",uDashlat);
-                        i.putExtra("lon",uDashlon);
-                        startActivity(i);
-                        finish();
+                        callMianScreen(user_id,uDashlat,uDashlon);
+                        if(isinserted)
+                        {
 
+                        }
                     }
+                    btnSavePro.setEnabled(false);
             }
         });
 
+    }
+
+    private void callMianScreen(String user_id, double uDashlat, double uDashlon) {
+        Intent i = new Intent(getApplicationContext(),MainScreen.class);
+        i.putExtra("user_id",user_id);
+        i.putExtra("lat",uDashlat);
+        i.putExtra("lon",uDashlon);
+        i.putExtra("uemail",email);
+        startActivity(i);
+        finish();
     }
 
     private void saveUserandpass() {
@@ -206,14 +223,16 @@ public class edit_dashboard extends AppCompatActivity
         callingurl.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                etEtDashUDesc.setText(response.body());
+                isinserted = true;
                 user_id = response.body();
-                Toast.makeText(edit_dashboard.this, ""+user_id, Toast.LENGTH_SHORT).show();
+                editor.putString("uid",user_id);
+                editor.commit();
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                //etEtDashUDesc.setText(""+call.toString());
+                Toast.makeText(edit_dashboard.this,
+                        "Failed to insert user"+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -283,6 +302,7 @@ public class edit_dashboard extends AppCompatActivity
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
         mLastLoc = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
         if(mLastLoc!=null) {
             uDashlat = mLastLoc.getLatitude();
@@ -340,5 +360,44 @@ public class edit_dashboard extends AppCompatActivity
         {
             mLocationClient.connect();
         }
+        if(!(sharedPrefs.getString("uid","33").equals("33")))
+        {
+            callMianScreen(sharedPrefs.getString("uid","33"),uDashlat,uDashlon);
+        }
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+      /*  Profile userProfile = Profile.getCurrentProfile();
+        if (userProfile != null){
+
+        }else{
+
+        }*/
+        if(!(sharedPrefs.getString("uid","33").equals("33")))
+        {
+            callMianScreen(sharedPrefs.getString("uid","33"),uDashlat,uDashlon);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
     }
 }

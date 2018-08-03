@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class User_main extends AppCompatActivity{
 
-    private String user_id,name,work,uname,desc;
+    private String user_id,name,work,uname,desc,email;
     private int age,id,fbid;
     private TextView tv_detail_uname,tv_detail_udesc,tv_detail_username,tv_detail_user_age,tv_detail_user_work;
     private  Button btn_detail_Grabit,btn_detail_ignore;
@@ -57,13 +57,14 @@ public class User_main extends AppCompatActivity{
         {
         user_id = i.getStringExtra("user_id");
         name = i.getStringExtra("name");
+        email = i.getStringExtra("emaill");
         fbid = i.getIntExtra("fbid",457896321);
         work = i.getStringExtra("work");
         age = i.getIntExtra("age",20);
         }
         tv_detail_username.setText(name);
         tv_detail_user_work.setText(work);
-        tv_detail_user_age.setText(age);
+        //tv_detail_user_age.setText(age);
         tv_detail_udesc.setText(work);
         Picasso.with(this).load("https://graph.facebook.com/"+fbid+"/picture?type=large")
                 .error(R.drawable.intropg1).into(iv_detail_user);
@@ -71,7 +72,9 @@ public class User_main extends AppCompatActivity{
         btn_detail_ignore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(getApplicationContext(),ChatListAct.class);
+                i.putExtra("uem",email);
+                startActivity(i);
             }
         });
         btn_detail_Grabit.setOnClickListener(new View.OnClickListener() {
