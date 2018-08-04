@@ -14,7 +14,7 @@
     <string name="fb_login_protocol_scheme">fb2434251726603876</string>
 
     <string-array name="nearrestList">
-        <item name="1">Dumy Rest's Pizza</item>
+        <item name="1">Click here for Choosing</item>
     </string-array>
     <string name="title_activity_navdraw">navdraw</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

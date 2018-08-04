@@ -40,7 +40,7 @@ public class ChatListAct extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     boolean isPswdGot;
-    String Pswd="7895dfghjl",email;
+    String Pswd="",email="";
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedPrefs;
     SharedPreferences.Editor editor;
@@ -76,40 +76,12 @@ public class ChatListAct extends AppCompatActivity
         //sharedPrefernce for getPswd
         sharedPrefs = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         editor = sharedPrefs.edit();
-        //showing 1st time for getting pswd
-      //  if (sharedPrefs.getBoolean("isgetPswd", false)) {
-            //firstTimePassword Asking
-            final View view = layoutif.inflate(R.layout.chat_pswd, null);
-            final AlertDialog alertDialog = new AlertDialog.Builder(ChatListAct.this).create();
-            alertDialog.setTitle("Enter Password for Chats");
-            alertDialog.setCancelable(false);
-            final EditText etPswd = (EditText) view.findViewById(R.id.et_dialog_chat_pswd);
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (etPswd.getText().length() != 8) {
-                        etPswd.setError("Please Enter valid password\n Not Less than 8");
-                        etPswd.requestFocus();
-                        return;
 
-                    }
-                    else {
-                        Pswd = etPswd.getText().toString();
-                        isPswdGot = true;
-                        createQBUser();
-                        editor.putBoolean("isgetPswd", isPswdGot);
-                        editor.putString("pswdUser", Pswd);
-                        editor.commit();
-                    }
-                }
-            });
-            alertDialog.setView(view);
-            alertDialog.show();
-     //   }
-        //getting uemail
         Intent i = getIntent();
         if(!i.equals(null)){
             email = i.getStringExtra("uem");
+            Pswd = i.getStringExtra("name");
+            Pswd.concat(i.getStringExtra("work"));
             editor.putString("chatemail", email);
             editor.commit();
         }

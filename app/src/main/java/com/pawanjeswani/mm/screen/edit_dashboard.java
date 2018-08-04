@@ -12,7 +12,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,6 +40,7 @@ import com.pawanjeswani.mm.network.ApiUtils;
 import com.pawanjeswani.mm.network.RerofitInstance;
 import com.pawanjeswani.mm.network.apiinter;
 import com.squareup.picasso.Picasso;
+import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,33 +57,27 @@ public class edit_dashboard extends AppCompatActivity
 
     private CircularImageView ivUser;
     private ImageView ivDashBack, ivDashMenu;
-    private EditText etDashUname, etDashUage, etDashUwork, etEtDashUDesc;
+    private EditText etDashUname, etDashUage, etDashUwork, etEtDashUDesc,etIntRest;
     private TextView tvUsernm;
     private Button btnSavePro;
     private RadioGroup rgDashGender, rgDashFoodPr;
     private LiquidRadioButton rbMale, rbFemale, rbDashVeg, rbDashNV, rbDashVegan;
     private Spinner spnDashRestlist;
-    private String fname = "", lname = "", email = "", id = "", birthdate = "", profile_url = "",genderst="",user_id="33";
-    private String [] RestList;
+    private String fname = "", lname = "", email = "", id = "", birthdate = "", profile_url = "",genderst="",user_id="33",interstrests,passintids;
+    private String [] RestList, nearbyRestArrid;
     private Calendar dob = Calendar.getInstance();
-    private userpojo dashuser;
     private int selected_food=1,age=18,gender=2;
-    private userpojo userdetails;
     double uDashlat=0.0, uDashlon=0.0;
     private GoogleApiClient mLocationClient;
     private Location mLastLoc;
-    private String [] nearbyRestArr;
-    private ArrayAdapter<String> restAdapter;
-    private RadioButton dumRB;
     private restLispojo uDashResponse;
     private restlist rlist;
     private List<restlist> nearbyRestaurants;
-    ArrayAdapter<String> restListAdap;
     boolean isinserted;
-    public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedPrefs;
     SharedPreferences.Editor editor;
     Typeface mytypef;
+    private boolean isGotRestList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +86,7 @@ public class edit_dashboard extends AppCompatActivity
         //mapping with java
         mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
         tvUsernm = findViewById(R.id.tvDashUname);
+        etIntRest = findViewById(R.id.etIntRests);
         ivUser = findViewById(R.id.ivUserPic);
         ivDashBack = findViewById(R.id.ivdashback);
         ivDashMenu = findViewById(R.id.ivdashmenu);
@@ -117,6 +115,7 @@ public class edit_dashboard extends AppCompatActivity
         etDashUname.setTypeface(mytypef);
         etEtDashUDesc.setTypeface(mytypef);
         etDashUwork.setTypeface(mytypef);
+        etIntRest.setTypeface(mytypef);
         rbDashNV.setTypeface(mytypef);
         rbDashVeg.setTypeface(mytypef);
         rbDashVegan.setTypeface(mytypef);
@@ -169,6 +168,16 @@ public class edit_dashboard extends AppCompatActivity
         builder.addConnectionCallbacks(this);
         builder.addOnConnectionFailedListener(this);
         mLocationClient = builder.build();
+        etIntRest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isGotRestList)
+                    getInterstRest(RestList);
+                else
+                    Toast.makeText(edit_dashboard.this,
+                            "Please wait", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         btnSavePro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +186,8 @@ public class edit_dashboard extends AppCompatActivity
                 if(btnSavePro.isEnabled())
                     if(isDataCorret())
                     {
+                        editor.putString("curuname",fname+" "+lname);
+                        editor.commit();
                         Toast.makeText(edit_dashboard.this, "insert User calling", Toast.LENGTH_LONG).show();
                         insertUser();
                         callMianScreen(user_id,uDashlat,uDashlon);
@@ -197,12 +208,38 @@ public class edit_dashboard extends AppCompatActivity
         i.putExtra("lat",uDashlat);
         i.putExtra("lon",uDashlon);
         i.putExtra("uemail",email);
+        i.putExtra("name",fname+" "+lname);
+        i.putExtra("work",etDashUwork.getText().toString());
         startActivity(i);
         finish();
     }
 
-    private void saveUserandpass() {
-        //save user details on server
+    private void getInterstRest(final String[] adapter) {
+        new LovelyChoiceDialog(this, R.style.CheckBoxTintTheme)
+
+                .setTitle("Select Restuarants")
+                .setMessage("From the Folowing")
+                .setItemsMultiChoice(adapter, new LovelyChoiceDialog.OnItemsSelectedListener<String>() {
+                    @Override
+                    public void onItemsSelected(List<Integer> positions, List<String> items) {
+                        interstrests=" ";
+                        for(int i=0;i<items.size();i++)
+                        {
+                            interstrests+=RestList[positions.get(i)]+" , ";
+                        }
+                        setpassintids(positions,items);
+                        etIntRest.setText(interstrests);
+                    }
+                })
+                .setConfirmButtonText("Confirm")
+                .show();
+    }
+
+    private void setpassintids(List<Integer> positions, List<String> items) {
+        for(int i=0;i<items.size();i++)
+        {
+            passintids=nearbyRestArrid[positions.get(i)]+" , ";
+        }
     }
 
 
@@ -215,12 +252,16 @@ public class edit_dashboard extends AppCompatActivity
                 uDashResponse = response.body();
                 nearbyRestaurants=uDashResponse.getNearbyRestaurants();
                 RestList= new String[nearbyRestaurants.size()];
+                isGotRestList = true;
+                nearbyRestArrid= new String[nearbyRestaurants.size()];
                 for(int i =0;i< nearbyRestaurants.size();i++) {
                     rlist = nearbyRestaurants.get(i);
+                    nearbyRestArrid[i]= ""+rlist.getId();
                     RestList[i] = "" + rlist.getName();
                 }
-                restAdapter= new ArrayAdapter<String> (getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,RestList);
-                spnDashRestlist.setAdapter(restAdapter);
+
+                //restAdapter= new ArrayAdapter<String> (getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,RestList);
+                //getInterstRest(RestList);
             }
 
             @Override
@@ -233,10 +274,11 @@ public class edit_dashboard extends AppCompatActivity
     private void insertUser() {
 
         Call<String > callingurl =
-                ApiUtils.getResponseUser().insertUser(""+fname+" "+lname,getAge(dob),"pawanjes@gmail.com",gender, id,
-                        etDashUwork.getText().toString().trim(),
-                        etEtDashUDesc.getText().toString().trim(),
-                        getFoodType(selected_food),"123,456,789");
+                ApiUtils.getResponseUser().insertUser(etDashUname.getText().toString(), Integer.parseInt(etDashUage.getText().toString()),
+                        email,gender,id,
+                        etDashUwork.getText().toString(),
+                        etEtDashUDesc.getText().toString(),
+                        getFoodType(selected_food),passintids);
 
         callingurl.enqueue(new Callback<String>() {
             @Override
@@ -265,10 +307,14 @@ public class edit_dashboard extends AppCompatActivity
 
     }
     private void setgender() {
-        if (genderst.equals("male"))
+        if (genderst.equals("male")){
             rbMale.setChecked(true);
-        else
+            gender=1;
+            }
+        else{
             rbFemale.setChecked(true);
+            gender=2;
+    }
     }
 
     private void setAge() {

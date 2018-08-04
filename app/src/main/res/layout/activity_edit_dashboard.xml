@@ -333,8 +333,18 @@
             <Spinner
                 android:id="@+id/spnDashRest"
                 android:entries="@array/nearrestList"
+                android:layout_width="0dp"
+                android:layout_height="0dp" />
+
+            <EditText
+                android:id="@+id/etIntRests"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textAutoComplete"
+                android:text=""
+                android:hint="Click Here for Choosing"/>
+
             <Button
                 android:id="@+id/btnDashSave"
                 android:layout_width="300dp"

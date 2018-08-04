@@ -1,6 +1,7 @@
 package com.pawanjeswani.mm.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.PagerAdapter;
@@ -16,6 +17,7 @@ public class sliderAdapter extends PagerAdapter {
 
     Context context;
     LayoutInflater inflater;
+    private Typeface mytypef;
 
     public sliderAdapter(Context context) {
         this.context = context;
@@ -63,6 +65,9 @@ public class sliderAdapter extends PagerAdapter {
         ivImg.setImageResource(imgs_list[position]);
         tvTitle.setText(title_list[position]);
         tvdesc.setText(desc_list[position]);
+        mytypef = Typeface.createFromAsset(container.getContext().getAssets(),"fonts/Myriad_Pro_Regular.ttf");
+        tvdesc.setTypeface(mytypef);
+        tvTitle.setTypeface(mytypef);
         container.addView(view);
         return view;
     }

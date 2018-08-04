@@ -1,6 +1,8 @@
 package com.pawanjeswani.mm.screen;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -30,7 +32,9 @@ public class User_main extends AppCompatActivity{
     private  Button btn_detail_Grabit,btn_detail_ignore;
     private com.mikhaellopez.circularimageview.CircularImageView iv_detail_user;
     private Typeface mytypef;
-
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    SharedPreferences sharedPrefs;
+    SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,9 @@ public class User_main extends AppCompatActivity{
         btn_detail_ignore=findViewById(R.id.btn_detail_ignore);
         tv_detail_username=findViewById(R.id.tv_detail_username);
         iv_detail_user=findViewById(R.id.iv_detail_user);
+
+        sharedPrefs = getSharedPreferences(MainActivity.MyPREFERENCES, Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
 
         mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
         tv_detail_udesc.setTypeface(mytypef);
@@ -72,12 +79,12 @@ public class User_main extends AppCompatActivity{
         email = i.getStringExtra("emaill");
         fbid = i.getIntExtra("fbid",457896321);
         work = i.getStringExtra("work");
-        age = i.getIntExtra("age",20);
+        age = Integer.parseInt(i.getStringExtra("age"));
         }
         tv_detail_username.setText(name);
         tv_detail_user_work.setText(work);
-        //tv_detail_user_age.setText(age);
-        tv_detail_udesc.setText(work);
+        tv_detail_user_age.setText(""+age);
+        tv_detail_uname.setText("Hi "+sharedPrefs.getString("curuname","")+",");
         Picasso.with(this).load("https://graph.facebook.com/"+fbid+"/picture?type=large")
                 .error(R.drawable.intropg1).into(iv_detail_user);
 
@@ -86,6 +93,8 @@ public class User_main extends AppCompatActivity{
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(),ChatListAct.class);
                 i.putExtra("uem",email);
+                i.putExtra("work",work);
+                i.putExtra("name",name);
                 startActivity(i);
             }
         });

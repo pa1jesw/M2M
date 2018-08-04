@@ -41,6 +41,7 @@ public class MainScreen extends AppCompatActivity
     //private ArrayList<userpojoRes> usersList;
     private List<userpojoRes> usersList = new ArrayList<>();;
     private Typeface mytypef;
+    private String name,work;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,9 @@ public class MainScreen extends AppCompatActivity
             user_id = i.getStringExtra("user_id");
             umainlat= i.getDoubleExtra("lat",0.0);
             umainlon= i.getDoubleExtra("lon",0.0);
-           email = i.getStringExtra("uemail");
+            email = i.getStringExtra("uemail");
+            work = i.getStringExtra("work");
+            name= i.getStringExtra("name");
         }
         else
             Toast.makeText(this,

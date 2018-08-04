@@ -53,7 +53,7 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
                 i.putExtra("user_id",user.getId());
                 i.putExtra("name",user.getName());
                 i.putExtra("emaill",user.getEmail());
-                i.putExtra("age",user.getAge());
+                i.putExtra("age",""+user.getAge());
                 i.putExtra("fbid",user.getFbId());
                 i.putExtra("work",user.getWork());
                 activity.startActivity(i);
