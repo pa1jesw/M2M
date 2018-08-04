@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -59,10 +60,14 @@ public class MainActivity extends AppCompatActivity {
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedPrefs;
     SharedPreferences.Editor editor;
+    private Typeface mytypef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         //fbCallback mngr
@@ -84,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
         pageIndicator.setViewPager(vpIntro);
         fbtnfb = findViewById(R.id.btnFBC);
         skipfb = findViewById(R.id.btnskip);
+        fbtnfb.setTypeface(mytypef);
+        skipfb.setTypeface(mytypef);
         checklocperm();
 
         skipfb.setOnClickListener(new View.OnClickListener() {

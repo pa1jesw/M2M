@@ -1,6 +1,7 @@
 package com.pawanjeswani.mm.screen;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +40,7 @@ public class MainScreen extends AppCompatActivity
     private int curUId;
     //private ArrayList<userpojoRes> usersList;
     private List<userpojoRes> usersList = new ArrayList<>();;
+    private Typeface mytypef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +57,8 @@ public class MainScreen extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
 
-        //adding dummy users data in recycler view
-      /*  dumuser = new userpojo("33","4578963","pawan jeswani","45","789","1",
-                "sdsd","sdsd","sdsd","dsdss","dsdsdsd");
-        userslist.add(dumuser);
-        userslist.add(dumuser);
-        userslist.add(dumuser);
-        userslist.add(dumuser);
-*/
         Intent i = getIntent();
         if(!i.equals(null))
         {

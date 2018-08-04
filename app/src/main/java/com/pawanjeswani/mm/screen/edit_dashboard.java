@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Profile;
@@ -53,6 +55,7 @@ public class edit_dashboard extends AppCompatActivity
     private CircularImageView ivUser;
     private ImageView ivDashBack, ivDashMenu;
     private EditText etDashUname, etDashUage, etDashUwork, etEtDashUDesc;
+    private TextView tvUsernm;
     private Button btnSavePro;
     private RadioGroup rgDashGender, rgDashFoodPr;
     private LiquidRadioButton rbMale, rbFemale, rbDashVeg, rbDashNV, rbDashVegan;
@@ -77,12 +80,15 @@ public class edit_dashboard extends AppCompatActivity
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedPrefs;
     SharedPreferences.Editor editor;
+    Typeface mytypef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_dashboard);
         //mapping with java
+        mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
+        tvUsernm = findViewById(R.id.tvDashUname);
         ivUser = findViewById(R.id.ivUserPic);
         ivDashBack = findViewById(R.id.ivdashback);
         ivDashMenu = findViewById(R.id.ivdashmenu);
@@ -106,6 +112,18 @@ public class edit_dashboard extends AppCompatActivity
                 onBackPressed();
             }
         });
+        tvUsernm.setTypeface(mytypef);
+        etDashUage.setTypeface(mytypef);
+        etDashUname.setTypeface(mytypef);
+        etEtDashUDesc.setTypeface(mytypef);
+        etDashUwork.setTypeface(mytypef);
+        rbDashNV.setTypeface(mytypef);
+        rbDashVeg.setTypeface(mytypef);
+        rbDashVegan.setTypeface(mytypef);
+        rbFemale.setTypeface(mytypef);
+        rbMale.setTypeface(mytypef);
+        etDashUage.setTypeface(mytypef);
+        etDashUage.setTypeface(mytypef);
 
         //sharedPrefernce for Facebook json
         sharedPrefs = getSharedPreferences(MainActivity.MyPREFERENCES, Context.MODE_PRIVATE);

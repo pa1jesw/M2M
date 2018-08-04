@@ -1,6 +1,7 @@
 package com.pawanjeswani.mm.screen;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -28,6 +29,8 @@ public class User_main extends AppCompatActivity{
     private TextView tv_detail_uname,tv_detail_udesc,tv_detail_username,tv_detail_user_age,tv_detail_user_work;
     private  Button btn_detail_Grabit,btn_detail_ignore;
     private com.mikhaellopez.circularimageview.CircularImageView iv_detail_user;
+    private Typeface mytypef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,15 @@ public class User_main extends AppCompatActivity{
         btn_detail_ignore=findViewById(R.id.btn_detail_ignore);
         tv_detail_username=findViewById(R.id.tv_detail_username);
         iv_detail_user=findViewById(R.id.iv_detail_user);
+
+        mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
+        tv_detail_udesc.setTypeface(mytypef);
+        tv_detail_uname.setTypeface(mytypef);
+        tv_detail_user_age.setTypeface(mytypef);
+        tv_detail_user_work.setTypeface(mytypef);
+        tv_detail_username.setTypeface(mytypef);
+        btn_detail_Grabit.setTypeface(mytypef);
+        btn_detail_ignore.setTypeface(mytypef);
 /*
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

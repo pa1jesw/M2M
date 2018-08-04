@@ -2,6 +2,7 @@ package com.pawanjeswani.mm.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import java.util.List;
 public class near_users_list_adapter extends RecyclerView.Adapter<near_users_list_adapter.user_holder> {
     private List<userpojoRes> mData;
     private Activity activity;
+    private Typeface mytypef;
 
     public near_users_list_adapter(List<userpojoRes> mData, Activity activity) {
         this.mData = mData;
@@ -75,20 +77,19 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
 
         public user_holder(View itemView) {
             super(itemView);
-
+            mytypef = Typeface.createFromAsset(itemView.getContext().getAssets(),"fonts/Myriad_Pro_Regular.ttf");
             iv_rec_user = itemView.findViewById(R.id.iv_rec_user);
-            iv_rec_user.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
             tv_rec_uname = itemView.findViewById(R.id.tv_rec_username);
             tv_rec_uage = itemView.findViewById(R.id.tv_rec_user_age);
             tv_rec_uwork = itemView.findViewById(R.id.tv_rec_user_work);
             btn_rec_grab = itemView.findViewById(R.id.btn_rec_Grabit);
             btn_rec_ignore = itemView.findViewById(R.id.btn_rec_ignore);
             btn_rec_save = itemView.findViewById(R.id.btn_rec_Save);
+            tv_rec_uage.setTypeface(mytypef);
+            tv_rec_uname.setTypeface(mytypef);
+            tv_rec_uwork.setTypeface(mytypef);
+            btn_rec_grab.setTypeface(mytypef);
+            btn_rec_ignore.setTypeface(mytypef);
 
             btn_rec_save.setOnClickListener(new View.OnClickListener() {
                 @Override
