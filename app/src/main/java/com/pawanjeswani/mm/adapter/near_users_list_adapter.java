@@ -1,7 +1,9 @@
 package com.pawanjeswani.mm.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -11,18 +13,28 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pawanjeswani.mm.R;
 import com.pawanjeswani.mm.model.userpojoRes;
+import com.pawanjeswani.mm.network.ApiUtils;
+import com.pawanjeswani.mm.screen.MainActivity;
 import com.pawanjeswani.mm.screen.User_main;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class near_users_list_adapter extends RecyclerView.Adapter<near_users_list_adapter.user_holder> {
     private List<userpojoRes> mData;
     private Activity activity;
     private Typeface mytypef;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    SharedPreferences sharedPrefs;
+    SharedPreferences.Editor editor;
 
     public near_users_list_adapter(List<userpojoRes> mData, Activity activity) {
         this.mData = mData;
@@ -39,7 +51,9 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
     }
 
     @Override
-    public void onBindViewHolder(@NonNull user_holder holder, int position) {
+    public void onBindViewHolder(@NonNull final user_holder holder, final int position) {
+        sharedPrefs = holder.itemView.getContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
         final userpojoRes user = mData.get(position);
         holder.tv_rec_uname.setText(""+user.getName());
         holder.tv_rec_uage.setText(""+user.getAge());
@@ -57,6 +71,49 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
                 i.putExtra("fbid",user.getFbId());
                 i.putExtra("work",user.getWork());
                 activity.startActivity(i);
+
+            }
+        });
+        holder.btn_rec_grab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               Call<String> call=  ApiUtils.getRightA().rightSwiped(Integer.parseInt(sharedPrefs.getString("uid","")),
+                        Integer.parseInt(user.getId()));
+
+               call.enqueue(new Callback<String>() {
+                   @Override
+                   public void onResponse(Call<String> call, Response<String> response) {
+                       holder.btn_rec_grab.setEnabled(false);
+                       holder.btn_rec_ignore.setEnabled(false);
+                       //mData.remove(position);
+                       //mData.notifyAll();
+
+                   }
+
+                   @Override
+                   public void onFailure(Call<String> call, Throwable t) {
+                       holder.btn_rec_grab.setText(t.getMessage());
+                   }
+               });
+            }
+        });
+        holder.btn_rec_ignore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<String > callleft = ApiUtils.getLeftA().leftSwiped(Integer.parseInt(sharedPrefs.getString("uid","")),
+                        Integer.parseInt(user.getId()));
+                callleft.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        holder.btn_rec_grab.setEnabled(false);
+                        holder.btn_rec_ignore.setEnabled(false);
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        holder.btn_rec_ignore.setText(""+t.getMessage());
+                    }
+                });
             }
         });
 
@@ -95,12 +152,6 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
                 @Override
                 public void onClick(View view) {
                     btn_rec_save.setText("saved");
-                }
-            });
-            btn_rec_grab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    btn_rec_grab.setText("grabed");
                 }
             });
             btn_rec_ignore.setOnClickListener(new View.OnClickListener() {

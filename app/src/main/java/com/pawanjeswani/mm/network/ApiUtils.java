@@ -12,7 +12,9 @@ public class ApiUtils {
     public static insertuserapi getResponseUser(){
         return RerofitInstance.getClient(Base_url).create(insertuserapi.class);
     }
-
+    public static updateUserApi updateUser(){
+        return RerofitInstance.getClient(Base_url).create(updateUserApi.class);
+    }
     public static apiinter getRestList(){
         return RerofitInstance.getClient(Base_url).create(apiinter.class);
     }
@@ -22,8 +24,14 @@ public class ApiUtils {
     public static getusersapi getnearusers(){
         return RerofitInstance.getClient(Base_url).create(getusersapi.class);
     }
-    public static api_match getmatchres(){
-        return RerofitInstance.getClient(Base_url).create(api_match.class);
+    public static rightSwipeApi getRightA(){
+        return RerofitInstance.getClient(Base_url).create(rightSwipeApi.class);
+    }
+    public static leftSwipeApi getLeftA(){
+        return RerofitInstance.getClient(Base_url).create(leftSwipeApi.class);
+    }
+    public static getUserFb getUserFb(){
+        return RerofitInstance.getClient(Base_url).create(getUserFb.class);
     }
 
 }

@@ -66,7 +66,7 @@ public class edit_dashboard extends AppCompatActivity
     private String fname = "", lname = "", email = "", id = "", birthdate = "", profile_url = "",genderst="",user_id="33",interstrests,passintids;
     private String [] RestList, nearbyRestArrid;
     private Calendar dob = Calendar.getInstance();
-    private int selected_food=1,age=18,gender=2;
+    private int selected_food=1,age=18,gender=0;
     double uDashlat=0.0, uDashlon=0.0;
     private GoogleApiClient mLocationClient;
     private Location mLastLoc;
@@ -78,11 +78,19 @@ public class edit_dashboard extends AppCompatActivity
     SharedPreferences.Editor editor;
     Typeface mytypef;
     private boolean isGotRestList;
+    private int genderid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_dashboard);
+
+        //set google api client for getting current lat lon
+        GoogleApiClient.Builder builder = new GoogleApiClient.Builder(this).addApi(LocationServices.API);
+        builder.addConnectionCallbacks(this);
+        builder.addOnConnectionFailedListener(this);
+        mLocationClient = builder.build();
+
         //mapping with java
         mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
         tvUsernm = findViewById(R.id.tvDashUname);
@@ -108,6 +116,12 @@ public class edit_dashboard extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+        ivDashMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(edit_dashboard.this, "PLease Fill The Details First", Toast.LENGTH_LONG).show();
             }
         });
         tvUsernm.setTypeface(mytypef);
@@ -139,6 +153,11 @@ public class edit_dashboard extends AppCompatActivity
         birthdate = i.getStringExtra("birthdate");
         profile_url = i.getStringExtra("profilepic");
         genderst = i.getStringExtra("gender");
+
+        editor.putInt("curUGen",gender);
+        editor.putString("curUBirth",birthdate);
+        editor.putString("curUGen",genderst);
+        editor.commit();
         }
         /*else {
             fname = "jen";
@@ -156,6 +175,8 @@ public class edit_dashboard extends AppCompatActivity
         setAge();
         setgender();
         selected_food = rgDashGender.getCheckedRadioButtonId();
+        genderid= rgDashGender.getCheckedRadioButtonId();
+
         try {
             Picasso.with(getApplicationContext()).load("https://graph.facebook.com/1782673958467396/picture?type=large")
             .error(R.drawable.intropg1).into(ivUser);
@@ -163,11 +184,6 @@ public class edit_dashboard extends AppCompatActivity
             Toast.makeText(this,
                     ""+e.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
         }
-        //set google api client for getting current lat lon
-        GoogleApiClient.Builder builder = new GoogleApiClient.Builder(this).addApi(LocationServices.API);
-        builder.addConnectionCallbacks(this);
-        builder.addOnConnectionFailedListener(this);
-        mLocationClient = builder.build();
         etIntRest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -209,6 +225,7 @@ public class edit_dashboard extends AppCompatActivity
         i.putExtra("lon",uDashlon);
         i.putExtra("uemail",email);
         i.putExtra("name",fname+" "+lname);
+        i.putExtra("desc",etEtDashUDesc.getText().toString());
         i.putExtra("work",etDashUwork.getText().toString());
         startActivity(i);
         finish();
@@ -216,7 +233,6 @@ public class edit_dashboard extends AppCompatActivity
 
     private void getInterstRest(final String[] adapter) {
         new LovelyChoiceDialog(this, R.style.CheckBoxTintTheme)
-
                 .setTitle("Select Restuarants")
                 .setMessage("From the Folowing")
                 .setItemsMultiChoice(adapter, new LovelyChoiceDialog.OnItemsSelectedListener<String>() {
@@ -275,10 +291,17 @@ public class edit_dashboard extends AppCompatActivity
 
         Call<String > callingurl =
                 ApiUtils.getResponseUser().insertUser(etDashUname.getText().toString(), Integer.parseInt(etDashUage.getText().toString()),
-                        email,gender,id,
+                        email,""+id,gender,"QBUserDet",
                         etDashUwork.getText().toString(),
                         etEtDashUDesc.getText().toString(),
                         getFoodType(selected_food),passintids);
+            editor.putString("curUName",etDashUname.getText().toString());
+            editor.putString("curUEmail",email);
+            editor.putString("curUWork",etDashUwork.getText().toString());
+            editor.putString("curUDesc",etEtDashUDesc.getText().toString());
+            editor.putInt("curUAge", Integer.parseInt(etDashUage.getText().toString()));
+            editor.putString("cuUFbid",id);
+            editor.commit();
 
         callingurl.enqueue(new Callback<String>() {
             @Override
@@ -313,7 +336,7 @@ public class edit_dashboard extends AppCompatActivity
             }
         else{
             rbFemale.setChecked(true);
-            gender=2;
+            gender=0;
     }
     }
 
@@ -371,6 +394,9 @@ public class edit_dashboard extends AppCompatActivity
         if(mLastLoc!=null) {
             uDashlat = mLastLoc.getLatitude();
             uDashlon = mLastLoc.getLongitude();
+            editor.putString("userLat",String.valueOf(uDashlat));
+            editor.putString("userLon",String.valueOf(uDashlon));
+            editor.commit();
             getRestList();
         }
         else {
@@ -390,6 +416,7 @@ public class edit_dashboard extends AppCompatActivity
 
 
     private boolean isDataCorret(){
+        setGenderId();
         if(etDashUname.getText().toString().length()<3)
             {
                 etDashUname.setError("invalid name");
@@ -417,6 +444,15 @@ public class edit_dashboard extends AppCompatActivity
         else
             return true;
     }
+
+    private void setGenderId() {
+        genderid= rgDashGender.getCheckedRadioButtonId();
+        if(genderid==rbFemale.getId())
+            gender=0;
+        else
+            gender=1;
+    }
+
     @Override
     protected void onStart() {
         super.onStart();

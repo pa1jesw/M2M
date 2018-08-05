@@ -8,10 +8,6 @@
             android:icon="@drawable/msgicon"
             android:title="Chats" />
         <item
-            android:id="@+id/nav_cl_Request"
-            android:icon="@drawable/requesticon"
-            android:title="Request" />
-        <item
             android:id="@+id/nav_cl_filter"
             android:icon="@drawable/filtericon"
             android:title="Filter" />

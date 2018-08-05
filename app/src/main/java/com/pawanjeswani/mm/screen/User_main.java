@@ -20,9 +20,14 @@ import android.widget.TextView;
 import com.pawanjeswani.mm.R;
 import com.pawanjeswani.mm.adapter.near_users_list_adapter;
 import com.pawanjeswani.mm.model.userpojo;
+import com.pawanjeswani.mm.network.ApiUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class User_main extends AppCompatActivity{
 
@@ -88,7 +93,7 @@ public class User_main extends AppCompatActivity{
         Picasso.with(this).load("https://graph.facebook.com/"+fbid+"/picture?type=large")
                 .error(R.drawable.intropg1).into(iv_detail_user);
 
-        btn_detail_ignore.setOnClickListener(new View.OnClickListener() {
+/*        btn_detail_ignore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(),ChatListAct.class);
@@ -97,13 +102,27 @@ public class User_main extends AppCompatActivity{
                 i.putExtra("name",name);
                 startActivity(i);
             }
-        });
+        });*/
         btn_detail_Grabit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Call<String > callleft = ApiUtils.getRightA().rightSwiped(Integer.parseInt(sharedPrefs.getString("uid","")),
+                        Integer.parseInt(user_id));
 
+                callleft.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        btn_detail_Grabit.setText(""+response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        btn_detail_Grabit.setText(""+t.getMessage());
+                    }
+                });
             }
         });
+
     }
 
   /*  @SuppressWarnings("StatementWithEmptyBody")

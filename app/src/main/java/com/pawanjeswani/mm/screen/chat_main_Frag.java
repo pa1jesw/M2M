@@ -59,8 +59,6 @@ public class chat_main_Frag extends AppCompatActivity
 
         if (id == R.id.nav_Chat) {
             // Handle the camera action
-        } else if (id == R.id.nav_cm_Request) {
-
         } else if (id == R.id.nav_cm_Edit) {
 
         } else if (id == R.id.nav_cm_About) {

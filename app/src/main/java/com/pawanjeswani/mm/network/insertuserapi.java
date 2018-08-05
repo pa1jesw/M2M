@@ -21,6 +21,7 @@ public interface insertuserapi {
                     @Query("name") String name,
                     @Query("age") int age,
                     @Query("email") String email,
+                    @Query("fb_id") String fb_id,
                     @Query("gender") int gender,
                     @Query("profile_url") String profile_url,
                     @Query("work") String work,

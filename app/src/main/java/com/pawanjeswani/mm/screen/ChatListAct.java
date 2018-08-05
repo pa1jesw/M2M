@@ -2,6 +2,7 @@ package com.pawanjeswani.mm.screen;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,11 +36,13 @@ import com.quickblox.users.model.QBUser;
 
 import org.jivesoftware.smack.chat.Chat;
 
+import java.util.Random;
+
 
 public class ChatListAct extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    boolean isPswdGot;
+    boolean isPswdGot=false;
     String Pswd="",email="";
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedPrefs;
@@ -48,7 +51,11 @@ public class ChatListAct extends AppCompatActivity
     static final String  AUTH_KEY = "S7nmy393teRB2Zm";
     static final String  AUTH_SECRET = "QhbFUhd5jwKWjAB";
     static final String  ACCOUNT_KEY = "CMe1J7yE-4s-r16g-s-Q";
+    private boolean isSignUp;
+    private boolean matchedUser= true;
     private Typeface mytypef;
+    private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
+    private QBUser chatUser;
 
 
     @Override
@@ -71,7 +78,7 @@ public class ChatListAct extends AppCompatActivity
         mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
 
         intializeFramework();
-        registerSession();
+       // login();
 
         //sharedPrefernce for getPswd
         sharedPrefs = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -80,25 +87,72 @@ public class ChatListAct extends AppCompatActivity
         Intent i = getIntent();
         if(!i.equals(null)){
             email = i.getStringExtra("uem");
-            Pswd = i.getStringExtra("name");
-            Pswd.concat(i.getStringExtra("work"));
+            //Pswd = i.getStringExtra("name");
+            //Pswd.concat(i.getStringExtra("work"));
             editor.putString("chatemail", email);
+            Pswd = getRandomString(8);
+            editor.putString("curUPswd", Pswd);
             editor.commit();
         }
+        if(isSignUp)
+            createQBUser();
+        else {
+           // loginQBUser();
+            createSession();
+        }
 
-        createQBUser();
+
+    }
+
+    private void createSession() {
+        final ProgressDialog mDialog = new ProgressDialog(ChatListAct.this);
+        mDialog.setMessage("PLease Wait for a moment...");
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.show();
+        QBAuth.createSession(chatUser).performAsync(new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession qbSession, Bundle bundle) {
+            mDialog.cancel();
+                Toast.makeText(ChatListAct.this,
+                        "No Users Available for Chat", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Toast.makeText(ChatListAct.this,
+                        "SssErr"+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loginQBUser() {
+        if(matchedUser)
+        {
+            Toast.makeText(this,
+                    "LOgging in ", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    private static String getRandomString ( int sizeOfRandomString)
+    {
+        final Random random=new Random();
+        final StringBuilder sb=new StringBuilder(sizeOfRandomString);
+        for(int i=0;i<sizeOfRandomString;++i)
+            sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
+        return sb.toString();
     }
 
     private void createQBUser() {
 
-            //if (!sharedPrefs.getBoolean("isgetPswd", false) && !sharedPrefs.getString("chatemail","").isEmpty()) {
-            QBUser chatUser = new QBUser(email,Pswd);
+            chatUser = new QBUser(email,Pswd);
 
             QBUsers.signUp(chatUser).performAsync(new QBEntityCallback<QBUser>() {
                 @Override
                 public void onSuccess(QBUser qbUser, Bundle bundle) {
-                    Toast.makeText(ChatListAct.this,
-                            "created user with "+qbUser.getPassword(), Toast.LENGTH_SHORT).show();
+                            isSignUp = true;
+                            editor.putBoolean("isSignUp",isSignUp);
+                            editor.commit();
                 }
 
                 @Override
@@ -109,17 +163,17 @@ public class ChatListAct extends AppCompatActivity
             });
     }
 
-    private void registerSession() {
-        QBAuth.createSession().performAsync(new QBEntityCallback<QBSession>() {
+    private void login() {
+        QBUsers.signIn(chatUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
-            public void onSuccess(QBSession qbSession, Bundle bundle) {
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+
 
             }
 
             @Override
             public void onError(QBResponseException e) {
-                Toast.makeText(ChatListAct.this,
-                        "err register"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatListAct.this, "errln"+e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -148,8 +202,6 @@ public class ChatListAct extends AppCompatActivity
 
         if (id == R.id.nav_Chat) {
             // Handle the camera action
-        } else if (id == R.id.nav_Request) {
-
         } else if (id == R.id.nav_Edit) {
 
         } else if (id == R.id.nav_About) {
@@ -164,4 +216,18 @@ public class ChatListAct extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.END);
         return true;
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(! sharedPrefs.getBoolean("isSignUp",false)){
+
+        }
+        else
+        {
+
+        }
+
+    }
 }
+
