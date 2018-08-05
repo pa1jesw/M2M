@@ -2,14 +2,18 @@ package com.pawanjeswani.mm.screen;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -41,6 +45,7 @@ import com.pawanjeswani.mm.network.RerofitInstance;
 import com.pawanjeswani.mm.network.apiinter;
 import com.squareup.picasso.Picasso;
 import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,13 +78,14 @@ public class edit_dashboard extends AppCompatActivity
     private restLispojo uDashResponse;
     private restlist rlist;
     private List<restlist> nearbyRestaurants;
-    boolean isinserted;
+    boolean isinserted = true;
     SharedPreferences sharedPrefs;
     SharedPreferences.Editor editor;
     Typeface mytypef;
     private boolean isGotRestList;
     private int genderid;
-
+    boolean gps_enabled,network_enabled;
+    LocationManager lm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +148,10 @@ public class edit_dashboard extends AppCompatActivity
         sharedPrefs = getSharedPreferences(MainActivity.MyPREFERENCES, Context.MODE_PRIVATE);
         editor = sharedPrefs.edit();
 
+        lm = (LocationManager)getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        gps_enabled = false;
+        network_enabled = false;
+        checkLocation();
         //getting data from fb
         Intent i = getIntent();
         if(!i.equals(null))
@@ -202,17 +212,17 @@ public class edit_dashboard extends AppCompatActivity
                 if(btnSavePro.isEnabled())
                     if(isDataCorret())
                     {
-                        editor.putString("curuname",fname+" "+lname);
-                        editor.commit();
-                        Toast.makeText(edit_dashboard.this, "insert User calling", Toast.LENGTH_LONG).show();
-                        insertUser();
+
                         callMianScreen(user_id,uDashlat,uDashlon);
                         if(isinserted)
                         {
+                            editor.putString("curuname",fname+" "+lname);
+                            editor.commit();
+                            insertUser();
 
                         }
                     }
-                    btnSavePro.setEnabled(false);
+
             }
         });
 
@@ -396,6 +406,7 @@ public class edit_dashboard extends AppCompatActivity
             uDashlon = mLastLoc.getLongitude();
             editor.putString("userLat",String.valueOf(uDashlat));
             editor.putString("userLon",String.valueOf(uDashlon));
+            isGotRestList=true;
             editor.commit();
             getRestList();
         }
@@ -460,8 +471,13 @@ public class edit_dashboard extends AppCompatActivity
         {
             mLocationClient.connect();
         }
-        if(!(sharedPrefs.getString("uid","33").equals("33")))
+        if(getIntent().getIntExtra("fromAct",0)!=0){
+            isinserted=false;
+
+        } else
         {
+            if(!(sharedPrefs.getString("uid","33").equals("33")))
+
             callMianScreen(sharedPrefs.getString("uid","33"),uDashlat,uDashlon);
         }
 
@@ -474,11 +490,40 @@ public class edit_dashboard extends AppCompatActivity
 
         }else{
 
-        }*/
+        }
         if(!(sharedPrefs.getString("uid","33").equals("33")))
         {
+
             callMianScreen(sharedPrefs.getString("uid","33"),uDashlat,uDashlon);
+        }*/
+        checkLocation();
+    }
+
+    private void checkLocation() {
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            new LovelyStandardDialog(this)
+                    .setTitle("GPS Disabled")
+                    .setCancelable(false)
+                    .setMessage("PLease Turn On GPS")
+                    .setPositiveButton("Turn On", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            getApplicationContext().startActivity(myIntent);
+                        }
+                    }).show();
+
         }
+        else
+            getRestList();
     }
 
     @Override

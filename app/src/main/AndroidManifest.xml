@@ -65,7 +65,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".screen.ChatListAct"
-            android:label="@string/title_activity_chat_list"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity

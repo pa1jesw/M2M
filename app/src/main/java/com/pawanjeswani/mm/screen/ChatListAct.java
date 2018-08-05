@@ -33,6 +33,7 @@ import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+import com.yarolegovich.lovelydialog.LovelyCustomDialog;
 
 import org.jivesoftware.smack.chat.Chat;
 
@@ -194,22 +195,39 @@ public class ChatListAct extends AppCompatActivity
     }
 
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_Chat) {
+        if (id == R.id.nav_cl_Chat) {
             // Handle the camera action
-        } else if (id == R.id.nav_Edit) {
 
-        } else if (id == R.id.nav_About) {
 
-        } else if (id == R.id.nav_Help) {
+        }  else if (id == R.id.nav_cl_Edit) {
+            Intent intent = new Intent(getApplicationContext(),edit_dashboard.class);
+            intent.putExtra("fname",sharedPrefs.getString("curUName",""));
+            intent.putExtra("fromAct",2);
+            intent.putExtra("lname","");
+            intent.putExtra("email",sharedPrefs.getString("curUEmail",""));
+            intent.putExtra("work",sharedPrefs.getString("curUWork",""));
+            intent.putExtra("desc",sharedPrefs.getString("curUDesc",""));
+            intent.putExtra("fbid",sharedPrefs.getString("cuUFbid",""));
+            intent.putExtra("birthdate",sharedPrefs.getString("curUBirth",""));
+            intent.putExtra("gender",sharedPrefs.getString("curUGen",""));
+            intent.putExtra("profilepic",sharedPrefs.getString("curUProfile",""));
+            startActivity(intent);
 
-        } else if (id == R.id.nav_filter) {
 
+        } else if (id == R.id.nav_cl_About) {
+            Toast.makeText(this, "screen for app details", Toast.LENGTH_SHORT).show();
+
+        } else if (id == R.id.nav_cl_Help) {
+            Toast.makeText(this, "Link to privacy policy", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_cl_filter) {
+            myView();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -217,6 +235,10 @@ public class ChatListAct extends AppCompatActivity
         return true;
     }
 
+    private void myView() {
+        new LovelyCustomDialog(this,R.style.Theme_AppCompat_Dialog)
+                .setView(R.layout.filter_container).show();
+    }
     @Override
     protected void onStart() {
         super.onStart();

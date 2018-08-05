@@ -15,8 +15,7 @@ import android.view.MenuItem;
 
 import com.pawanjeswani.mm.R;
 
-public class chat_main_Frag extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class chat_main_Frag extends AppCompatActivity {
 
     static final String  APP_ID = "72622";
     static final String  AUTH_KEY = "S7nmy393teRB2Zm";
@@ -27,7 +26,7 @@ public class chat_main_Frag extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_main__frag);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+/*        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -72,5 +71,6 @@ public class chat_main_Frag extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.END);
         return true;
+    }*/
     }
 }

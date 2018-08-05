@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         skipfb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),edit_profile.class);
+                Intent i = new Intent(getApplicationContext(),edit_dashboard.class);
                 i.putExtra("fname","john &");
                 i.putExtra("lname","doe");
                 i.putExtra("email","email.com");

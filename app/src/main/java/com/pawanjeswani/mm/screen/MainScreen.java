@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,10 +32,13 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.novoda.merlin.MerlinsBeard;
 import com.pawanjeswani.mm.R;
 import com.pawanjeswani.mm.adapter.near_users_list_adapter;
 import com.pawanjeswani.mm.model.userpojoRes;
 import com.pawanjeswani.mm.network.ApiUtils;
+import com.yarolegovich.lovelydialog.LovelyCustomDialog;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import org.json.JSONObject;
 
@@ -66,6 +71,9 @@ public class MainScreen extends AppCompatActivity
     SharedPreferences.Editor editor;
     private String desc;
     View view ;
+    private MerlinsBeard merlinsBeard;
+    private boolean gps_enabled,network_enabled;
+    LocationManager lm;
 
 
     @Override
@@ -96,6 +104,7 @@ public class MainScreen extends AppCompatActivity
         mLocationClient = builder.build();
         view = findViewById(R.id.viewRv);
 
+        lm = lm = (LocationManager)getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         Intent i = getIntent();
         if(!i.equals(null))
         {
@@ -111,10 +120,17 @@ public class MainScreen extends AppCompatActivity
             Toast.makeText(this,
                     "null intent content", Toast.LENGTH_SHORT).show();
         //getting user id
+        merlinsBeard = MerlinsBeard.from(getApplicationContext());
+        if(merlinsBeard.isConnected()) {
         curUId = getCurUserId();
 
         //getting nearbyuserdetails
         calnearAPI();
+        }
+        else {
+            Toast.makeText(this,
+                    "CHeck your Internet Conncection", Toast.LENGTH_SHORT).show();
+        }
 
       //recyclerview setting
         rv_matched_users =findViewById(R.id.users_rv);
@@ -192,7 +208,8 @@ public class MainScreen extends AppCompatActivity
         }  else if (id == R.id.nav_Edit) {
             Intent intent = new Intent(getApplicationContext(),edit_dashboard.class);
             intent.putExtra("fname",sharedPrefs.getString("curUName",""));
-            intent.putExtra("lname",sharedPrefs.getString("curUName",""));
+            intent.putExtra("fromAct",2);
+            intent.putExtra("lname","");
             intent.putExtra("email",sharedPrefs.getString("curUEmail",""));
             intent.putExtra("work",sharedPrefs.getString("curUWork",""));
             intent.putExtra("desc",sharedPrefs.getString("curUDesc",""));
@@ -201,7 +218,7 @@ public class MainScreen extends AppCompatActivity
             intent.putExtra("gender",sharedPrefs.getString("curUGen",""));
             intent.putExtra("profilepic",sharedPrefs.getString("curUProfile",""));
             startActivity(intent);
-            finish();
+
 
         } else if (id == R.id.nav_About) {
             Toast.makeText(this, "screen for app details", Toast.LENGTH_SHORT).show();
@@ -209,10 +226,7 @@ public class MainScreen extends AppCompatActivity
         } else if (id == R.id.nav_Help) {
             Toast.makeText(this, "Link to privacy policy", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_filter) {
-            view = myView();
-            view.setMinimumHeight(50);
-
-
+            myView();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -220,17 +234,9 @@ public class MainScreen extends AppCompatActivity
         return true;
     }
 
-    private View myView() {
-        View v; // Creating an instance for View Object
-        LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v= inflater.inflate(R.layout.filter_container,null);
-        RadioGroup rgDashFoodPr = findViewById(R.id.rgFilFood);
-        RadioButton rbDashVeg = findViewById(R.id.rbFilVeg);
-        RadioButton rbDashNV = findViewById(R.id.rbFilNonveg);
-        RadioButton rbDashVegan = findViewById(R.id.rbFilVegan);
-        EditText etFilIns  = findViewById(R.id.etFilterIns);
-        Button btnSav = findViewById(R.id.btnFilterSave);
-        return v;
+    private void myView() {
+       new LovelyCustomDialog(this,R.style.Theme_AppCompat_Dialog)
+               .setView(R.layout.filter_container).show();
     }
 
     @SuppressLint("MissingPermission")
@@ -262,4 +268,46 @@ public class MainScreen extends AppCompatActivity
             mLocationClient.connect();
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(merlinsBeard.isConnected()) {
+            curUId = getCurUserId();
+
+            //getting nearbyuserdetails
+            calnearAPI();
+        }
+        else {
+            Toast.makeText(this,
+                    "CHeck your Internet Conncection", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    private void checkLocation() {
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            new LovelyStandardDialog(this)
+                    .setTitle("GPS Disabled")
+                    .setMessage("PLease Turn On GPS")
+                    .setCancelable(false)
+                    .setPositiveButton("Turn On", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            getApplicationContext().startActivity(myIntent);
+                        }
+                    }).show();
+
+        }
+        else{}
+    }
+
 }
