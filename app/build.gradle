@@ -71,4 +71,7 @@ dependencies {
     implementation 'com.quickblox:quickblox-android-sdk-customobjects:3.7.0'
     //dialog for multi selection of rests
     implementation 'com.yarolegovich:lovely-dialog:1.1.0'
+    //rv animation
+    implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
+
 }

@@ -10,10 +10,6 @@
             android:icon="@drawable/msgicon"
             android:title="Chats" />
         <item
-            android:id="@+id/nav_cm_filter"
-            android:icon="@drawable/filtericon"
-            android:title="Filter" />
-        <item
             android:id="@+id/nav_cm_Edit"
             android:icon="@drawable/editicon"
             android:title="Edit " />

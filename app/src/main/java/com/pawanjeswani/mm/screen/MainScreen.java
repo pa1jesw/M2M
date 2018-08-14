@@ -19,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +46,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,7 +85,7 @@ public class MainScreen extends AppCompatActivity
         //drawer setting up
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -91,6 +93,18 @@ public class MainScreen extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (drawer.isDrawerOpen(Gravity.RIGHT)) {
+                    drawer.closeDrawer(Gravity.RIGHT);
+                } else {
+                    drawer.openDrawer(Gravity.RIGHT);
+                }
+            }
+        });
+//        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
 
         //sharedPrefernce for Facebook json
@@ -123,7 +137,6 @@ public class MainScreen extends AppCompatActivity
         merlinsBeard = MerlinsBeard.from(getApplicationContext());
         if(merlinsBeard.isConnected()) {
         curUId = getCurUserId();
-
         //getting nearbyuserdetails
         calnearAPI();
         }
@@ -135,11 +148,18 @@ public class MainScreen extends AppCompatActivity
       //recyclerview setting
         rv_matched_users =findViewById(R.id.users_rv);
         rv_matched_users.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        rv_matched_users.setItemAnimator(new ScaleInLeftAnimator());
         rv_matched_users.setHasFixedSize(true);
-        setRecViewItems(usersList);
+        rv_matched_users.getItemAnimator().setMoveDuration(500);
+        rv_matched_users.getItemAnimator().setRemoveDuration(500);
+        //setRecViewItems(usersList);
     }
 
     private void setRecViewItems(List<userpojoRes> userslist) {
+        if(userslist.size() == 0)
+            Toast.makeText(this,
+                    "Sorry, No Users Nearby", Toast.LENGTH_LONG).show();
+
         nearUsersListAdapter = new near_users_list_adapter(userslist,this);
         rv_matched_users.setAdapter(nearUsersListAdapter);
 
@@ -158,7 +178,7 @@ public class MainScreen extends AppCompatActivity
             @Override
             public void onFailure(Call<List<userpojoRes>> call, Throwable t) {
                 Toast.makeText(MainScreen.this,
-                        "No Users Nearby", Toast.LENGTH_SHORT).show();
+                        "Try After Sometime", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -186,8 +206,8 @@ public class MainScreen extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.END)) {
-            drawer.closeDrawer(GravityCompat.END);
+        if (drawer.isDrawerOpen(Gravity.RIGHT)) {
+            drawer.closeDrawer(Gravity.RIGHT);
         } else {
             super.onBackPressed();
         }
@@ -225,8 +245,6 @@ public class MainScreen extends AppCompatActivity
 
         } else if (id == R.id.nav_Help) {
             Toast.makeText(this, "Link to privacy policy", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_filter) {
-            myView();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -274,15 +292,12 @@ public class MainScreen extends AppCompatActivity
         super.onResume();
         if(merlinsBeard.isConnected()) {
             curUId = getCurUserId();
-
-            //getting nearbyuserdetails
-            calnearAPI();
         }
         else {
             Toast.makeText(this,
                     "CHeck your Internet Conncection", Toast.LENGTH_SHORT).show();
         }
-
+        checkLocation();
     }
     private void checkLocation() {
         try {

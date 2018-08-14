@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private CircleIndicator pageIndicator;
     private CallbackManager callbackManager;
     private LoginButton loginButton;
-    private String fname="",lname="",email="",id="",birthdate="",profile_url="",gender="",uid="";
+    private String fname="",lname="",email="",id="",birthdate="12/08/1998",profile_url="",gender="male",uid="";
     private ProfileTracker profileTracker;
     private FacebookCallback<LoginResult> facebookCallback;
     private MerlinsBeard merlinsBeard;
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         else
             Toast.makeText(this, "Please check your internet Coneection", Toast.LENGTH_SHORT).show();
 
-        loginButton.setReadPermissions("email","public_profile","user_birthday","user_gender");
+        loginButton.setReadPermissions("email","public_profile");
         // Callback registration
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 Bundle params = new Bundle();
-                params.putString("fields","first_name,last_name, email, id, birthday, gender");
+                params.putString("fields","first_name,last_name, email, id");
                 gr.setParameters(params);
                 gr.executeAsync();
             }
@@ -171,9 +171,7 @@ public class MainActivity extends AppCompatActivity {
             else
                 email = "not available";
             id = object.getString("id");
-            birthdate =  object.getString("birthday");
             profile_url = "http://graph.facebook.com/" + id + "/picture?type=large";
-            gender = object.getString("gender");
             Intent i = new Intent(getApplicationContext(),edit_dashboard.class);
             i.putExtra("fname",fname);
             i.putExtra("lname",lname);
@@ -195,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
     //fb login process
     private void fbconnect(){
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList(
-                "public_profile", "email", "user_birthday", "user_gender"));
+                "public_profile", "email"));
     }
 
 
@@ -205,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .withListener(new PermissionListener() {
                     @Override public void onPermissionGranted(PermissionGrantedResponse response) {/* ... */
-                        Toast.makeText(MainActivity.this, "granted", Toast.LENGTH_SHORT).show();}
+                        Toast.makeText(MainActivity.this, "Location Accessible", Toast.LENGTH_SHORT).show();}
                     @Override public void onPermissionDenied(PermissionDeniedResponse response) {/* ... */}
                     @Override public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {/* ... */}
                 })

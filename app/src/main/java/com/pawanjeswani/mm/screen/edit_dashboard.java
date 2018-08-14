@@ -63,7 +63,6 @@ public class edit_dashboard extends AppCompatActivity
     private CircularImageView ivUser;
     private ImageView ivDashBack, ivDashMenu;
     private EditText etDashUname, etDashUage, etDashUwork, etEtDashUDesc,etIntRest;
-    private TextView tvUsernm;
     private Button btnSavePro;
     private RadioGroup rgDashGender, rgDashFoodPr;
     private LiquidRadioButton rbMale, rbFemale, rbDashVeg, rbDashNV, rbDashVegan;
@@ -99,7 +98,7 @@ public class edit_dashboard extends AppCompatActivity
 
         //mapping with java
         mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
-        tvUsernm = findViewById(R.id.tvDashUname);
+
         etIntRest = findViewById(R.id.etIntRests);
         ivUser = findViewById(R.id.ivUserPic);
         ivDashBack = findViewById(R.id.ivdashback);
@@ -130,7 +129,7 @@ public class edit_dashboard extends AppCompatActivity
                 Toast.makeText(edit_dashboard.this, "PLease Fill The Details First", Toast.LENGTH_LONG).show();
             }
         });
-        tvUsernm.setTypeface(mytypef);
+
         etDashUage.setTypeface(mytypef);
         etDashUname.setTypeface(mytypef);
         etEtDashUDesc.setTypeface(mytypef);
@@ -148,10 +147,17 @@ public class edit_dashboard extends AppCompatActivity
         sharedPrefs = getSharedPreferences(MainActivity.MyPREFERENCES, Context.MODE_PRIVATE);
         editor = sharedPrefs.edit();
 
+        //checking location
         lm = (LocationManager)getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         gps_enabled = false;
         network_enabled = false;
         checkLocation();
+
+        //menu edit clikced
+        etDashUwork.setText(sharedPrefs.getString("curUWork",""));
+        etEtDashUDesc.setText(sharedPrefs.getString("curUDesc",""));
+        etIntRest.setText(sharedPrefs.getString("interrest","Click Here For Restaurants"));
+
         //getting data from fb
         Intent i = getIntent();
         if(!i.equals(null))
@@ -163,7 +169,6 @@ public class edit_dashboard extends AppCompatActivity
         birthdate = i.getStringExtra("birthdate");
         profile_url = i.getStringExtra("profilepic");
         genderst = i.getStringExtra("gender");
-
         editor.putInt("curUGen",gender);
         editor.putString("curUBirth",birthdate);
         editor.putString("curUGen",genderst);
@@ -217,6 +222,8 @@ public class edit_dashboard extends AppCompatActivity
                         if(isinserted)
                         {
                             editor.putString("curuname",fname+" "+lname);
+                            editor.putString("curUWork",etDashUwork.getText().toString());
+                            editor.putString("curUDesc",etEtDashUDesc.getText().toString());
                             editor.commit();
                             insertUser();
 
@@ -255,6 +262,7 @@ public class edit_dashboard extends AppCompatActivity
                         }
                         setpassintids(positions,items);
                         etIntRest.setText(interstrests);
+                        editor.putString("interrest",interstrests);
                     }
                 })
                 .setConfirmButtonText("Confirm")

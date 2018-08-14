@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +25,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class near_users_list_adapter extends RecyclerView.Adapter<near_users_list_adapter.user_holder> {
+public class near_users_list_adapter extends RecyclerView.Adapter<near_users_list_adapter.user_holder> implements AnimateViewHolder {
     private List<userpojoRes> mData;
     private Activity activity;
     private Typeface mytypef;
@@ -72,6 +74,7 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
                 i.putExtra("work",user.getWork());
                 activity.startActivity(i);
 
+
             }
         });
         holder.btn_rec_grab.setOnClickListener(new View.OnClickListener() {
@@ -83,11 +86,7 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
                call.enqueue(new Callback<String>() {
                    @Override
                    public void onResponse(Call<String> call, Response<String> response) {
-                       holder.btn_rec_grab.setEnabled(false);
-                       holder.btn_rec_ignore.setEnabled(false);
-                       //mData.remove(position);
-                       //mData.notifyAll();
-
+                       removed(holder.getAdapterPosition());
                    }
 
                    @Override
@@ -105,13 +104,12 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
                 callleft.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        holder.btn_rec_grab.setEnabled(false);
-                        holder.btn_rec_ignore.setEnabled(false);
+                        removed(holder.getAdapterPosition());
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-                        holder.btn_rec_ignore.setText(""+t.getMessage());
+                        Toast.makeText(activity, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -119,10 +117,36 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
 
     }
 
+    private void removed(int position) {
+        mData.remove(position);
+        notifyItemRemoved(position);
+    }
+
     @Override
     public int getItemCount() {
         return mData.size();
     }
+
+    @Override
+    public void preAnimateAddImpl(RecyclerView.ViewHolder holder) {
+
+    }
+
+    @Override
+    public void preAnimateRemoveImpl(RecyclerView.ViewHolder holder) {
+
+    }
+
+    @Override
+    public void animateAddImpl(RecyclerView.ViewHolder holder, ViewPropertyAnimatorListener listener) {
+
+    }
+
+    @Override
+    public void animateRemoveImpl(RecyclerView.ViewHolder holder, ViewPropertyAnimatorListener listener) {
+
+    }
+
 
     public class user_holder extends RecyclerView.ViewHolder {
         ImageView iv_rec_user;
@@ -147,19 +171,6 @@ public class near_users_list_adapter extends RecyclerView.Adapter<near_users_lis
             tv_rec_uwork.setTypeface(mytypef);
             btn_rec_grab.setTypeface(mytypef);
             btn_rec_ignore.setTypeface(mytypef);
-
-            btn_rec_save.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    btn_rec_save.setText("saved");
-                }
-            });
-            btn_rec_ignore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    btn_rec_ignore.setText("ignored");
-                }
-            });
 
         }
     }

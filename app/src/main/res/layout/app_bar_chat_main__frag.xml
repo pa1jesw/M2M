@@ -6,28 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".screen.chat_main_Frag">
 
-    <android.support.design.widget.AppBarLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layoutDirection="rtl"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="50dp"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
-            <ImageView
-                android:id="@+id/ivdashmenu"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/menuicon"
-                app:layout_constraintBottom_toTopOf="@+id/imageView4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
         </android.support.v7.widget.Toolbar>
 
 
@@ -37,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="50dp"
             android:background="@drawable/fbbtn"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,10 +34,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
-    </android.support.design.widget.AppBarLayout>
+    </android.support.constraint.ConstraintLayout>
 
 
-    <include layout="@layout/content_chat_main__frag" />
+    <include layout="@layout/content_chat_main__frag"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="60dp"/>
+
 
 
 

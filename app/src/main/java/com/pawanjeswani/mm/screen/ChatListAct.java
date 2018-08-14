@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -67,7 +68,7 @@ public class ChatListAct extends AppCompatActivity
         setSupportActionBar(toolbar);
         LayoutInflater layoutif = getLayoutInflater();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -75,6 +76,17 @@ public class ChatListAct extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (drawer.isDrawerOpen(Gravity.RIGHT)) {
+                    drawer.closeDrawer(Gravity.RIGHT);
+                } else {
+                    drawer.openDrawer(Gravity.RIGHT);
+                }
+            }
+        });
 
         mytypef = Typeface.createFromAsset(this.getAssets(),"fonts/Myriad_Pro_Regular.ttf");
 
@@ -115,13 +127,13 @@ public class ChatListAct extends AppCompatActivity
             public void onSuccess(QBSession qbSession, Bundle bundle) {
             mDialog.cancel();
                 Toast.makeText(ChatListAct.this,
-                        "No Users Available for Chat", Toast.LENGTH_LONG).show();
+                        "No Users Currently Available for Chat", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(QBResponseException e) {
                 Toast.makeText(ChatListAct.this,
-                        "SssErr"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        "Error while Creating Session"+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -226,8 +238,6 @@ public class ChatListAct extends AppCompatActivity
 
         } else if (id == R.id.nav_cl_Help) {
             Toast.makeText(this, "Link to privacy policy", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_cl_filter) {
-            myView();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
